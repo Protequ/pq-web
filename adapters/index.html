@@ -613,6 +613,26 @@
     });
 
     renderSections();
+
+    // ─── Auto-resize when embedded as iframe (postMessage) ────
+    // Parent listens for {type:'pq-iframe-resize', height} and sets
+    // the iframe's CSS height accordingly. See Webnode embed snippet
+    // in the repo README. No-op when loaded as top-level document.
+    (function () {
+      if (window.self === window.top) return;
+      function postHeight() {
+        const h = Math.max(
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        parent.postMessage({ type: 'pq-iframe-resize', height: h }, '*');
+      }
+      if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(postHeight).observe(document.body);
+      }
+      window.addEventListener('load', postHeight);
+      setTimeout(postHeight, 50);
+    })();
   </script>
 </body>
 </html>
