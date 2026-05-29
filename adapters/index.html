@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protequ — Adapters & Integrations</title>
+  <meta name="description" content="Protequ Physical Integration Management System — supported adapters and integrations (CCTV, intrusion, access control)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0:        #1a1b22;
+      --bg-1:        rgb(35, 36, 44);
+      --bg-2:        rgb(50, 51, 61);
+      --line:        rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text:        #f1f3f6;
+      --text-dim:    #a3a8b3;
+      --text-faint:  #6c7180;
+      --accent:      #00b0f0;            /* PQ glow */
+      --accent-dim:  rgba(0, 176, 240, 0.18);
+      --accent-soft: rgba(0, 176, 240, 0.08);
+      --brand-pink:  #FFAAAA;            /* logo lock */
+      --ok:          #4caf50;
+      --warn:        #F9A825;
+      --info:        #1565C0;
+      --font-sans:   'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-0);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-feature-settings: 'cv11', 'ss01';
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      line-height: 1.55;
+    }
+
+    body {
+      background:
+        radial-gradient(1100px 540px at 20% -10%, rgba(0,176,240,0.10), transparent 60%),
+        radial-gradient(900px 480px at 95% 0%, rgba(255,170,170,0.07), transparent 65%),
+        var(--bg-0);
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 56px;
+      position: relative;
+    }
+    .brand-row { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+    .brand-mark {
+      width: 56px; height: 56px;
+      border-radius: 50%;                                  /* .rounded-circle */
+      background: radial-gradient(circle, #fff 0%, #fff 65%, transparent 66%);   /* .pq-logo */
+      box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.5);    /* .pq-logo-glow */
+      animation: pq-glow 2s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    @keyframes pq-glow {
+      0%, 100% { box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.45); }
+      50%      { box-shadow: 0 0 22px 10px rgba(0, 176, 240, 0.8); }
+    }
+    .brand-mark svg { width: 100%; height: 100%; display: block; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text .name { font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+    .brand-text .sub  { font-weight: 500; font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 68px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin: 0 0 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #c8cdd6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 .accent { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+
+    .hero p.lead {
+      font-size: clamp(16px, 1.5vw, 19px);
+      color: var(--text-dim);
+      max-width: 720px;
+      margin: 0 0 28px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 28px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-faint);
+    }
+    .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); display: inline-block; margin-right: 8px; box-shadow: 0 0 8px var(--ok); }
+
+    /* ─── SEARCH ─────────────────────────────────────────────── */
+    .search {
+      position: relative;
+      margin: 40px 0 12px;
+    }
+    .search input {
+      width: 100%;
+      appearance: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      font: 500 15px var(--font-sans);
+      padding: 14px 16px 14px 46px;
+      outline: none;
+      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .search input::placeholder { color: var(--text-faint); }
+    .search input:focus {
+      border-color: var(--accent-dim);
+      background: rgba(0,176,240,0.04);
+      box-shadow: 0 0 0 4px rgba(0,176,240,0.10);
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      appearance: none;
+      background: rgba(255,255,255,0.06);
+      border: 0;
+      color: var(--text-dim);
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .search-clear:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+    .search.has-value .search-clear { display: inline-flex; }
+
+    .empty-state {
+      padding: 56px 24px;
+      text-align: center;
+      color: var(--text-faint);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+    .empty-state strong { color: var(--text-dim); display: block; margin-bottom: 4px; font-weight: 600; }
+    .empty-state code { color: var(--text); background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+    /* ─── FILTER ─────────────────────────────────────────────── */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 40px 0 32px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(6px);
+    }
+    .filter-btn {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-dim);
+      font: 500 13px/1 var(--font-sans);
+      padding: 9px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      letter-spacing: 0.01em;
+    }
+    .filter-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .filter-btn.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-color: var(--accent-dim);
+      box-shadow: 0 0 16px -4px var(--accent-dim);
+    }
+    .filter-btn .count {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .filter-btn.active .count { background: var(--accent-dim); color: var(--accent); }
+
+    /* ─── SECTION ────────────────────────────────────────────── */
+    .section { margin: 56px 0; }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-head h2 svg { width: 22px; height: 22px; color: var(--accent); }
+    .section-head .desc { color: var(--text-faint); font-size: 13px; flex: 1; }
+
+    /* ─── GRID & CARD ────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 22px 22px 18px;
+      background: linear-gradient(180deg, var(--bg-1) 0%, rgba(35,36,44,0.6) 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .card::before {
+      content: "";
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: radial-gradient(380px 180px at 100% 0%, rgba(0,176,240,0.10), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      box-shadow:
+        0 10px 30px -10px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(0, 176, 240, 0.18) inset;
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .icon-tile {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+      color: var(--accent);
+    }
+    .icon-tile svg { width: 22px; height: 22px; }
+
+    .card-title { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+    .card-title h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.005em;
+      line-height: 1.25;
+      color: var(--text);
+    }
+    .vendor {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .badge-demo {
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--warn);
+      background: rgba(249, 168, 37, 0.10);
+      border: 1px solid rgba(249, 168, 37, 0.32);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      flex: 1;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      color: var(--text-dim);
+    }
+    .chip svg { width: 11px; height: 11px; }
+
+    .card-bottom {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+    }
+    .pull-cmd {
+      flex: 1;
+      min-width: 0;
+      font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .pull-cmd::before {
+      content: "$ ";
+      color: var(--text-faint);
+    }
+    .pull-cmd:hover { border-color: var(--accent-dim); color: var(--text); }
+    .pull-cmd.copied { border-color: var(--ok); color: var(--ok); }
+    .pull-cmd.copied::before { content: "✓ "; color: var(--ok); }
+
+    .soon {
+      flex: 1;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      margin-top: 96px;
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--line);
+      color: var(--text-faint);
+      font-size: 13px;
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    footer .links { display: flex; gap: 20px; }
+    footer .links a { color: var(--text-dim); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero { padding: 56px 0 32px; }
+      .section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+
+    <!-- ─── HERO ─── -->
+    <section class="hero">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">
+          <!-- Real PQ logo from src/Pq.Client.App/wwwroot/img/pq.logo.svg -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0,1024) scale(0.1,-0.1)" fill="#000" stroke="none">
+              <path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0 -5120z m7320 1715 c259 -32 531 -95 848 -197 l193 -62 -4 -721 c-3 -624 -6 -733 -21 -815 -52 -290 -136 -491 -306 -733 -77 -110 -351 -388 -490 -498 -108 -86 -259 -193 -264 -188 -71 84 -207 251 -204 253 43 25 260 199 339 273 296 275 447 485 534 746 66 198 67 212 72 848 l4 576 -178 51 c-345 100 -656 150 -878 139 -120 -6 -330 -42 -414 -72 -24 -8 -47 -15 -51 -15 -4 0 -52 37 -106 81 -55 45 -116 93 -136 108 -21 14 -38 29 -38 33 0 14 146 93 230 124 88 34 246 68 385 84 103 11 326 5 485 -15z m-1745 -145 c297 -28 532 -127 743 -313 372 -327 538 -866 442 -1432 -30 -177 -108 -388 -191 -517 -19 -29 -28 -52 -23 -60 5 -7 139 -194 300 -414 160 -221 294 -406 297 -411 4 -6 -26 -27 -66 -48 l-73 -38 -134 73 c-277 150 -429 258 -577 407 l-102 104 -88 -53 c-147 -89 -310 -145 -491 -169 -110 -15 -352 -7 -450 15 -230 50 -482 184 -619 327 -124 131 -260 354 -321 529 -147 421 -117 912 80 1304 59 117 104 186 181 274 270 310 664 462 1092 422z m-2450 -30 c298 -34 535 -168 685 -385 48 -70 108 -202 131 -290 47 -180 34 -431 -32 -623 -91 -270 -314 -468 -618 -550 -94 -25 -105 -26 -478 -30 l-383 -4 0 -464 0 -464 -273 0 c-199 0 -276 3 -285 12 -9 9 -12 335 -12 1403 0 766 3 1395 7 1398 11 11 1159 8 1258 -3z"/>
+              <path d="M5281 6155 c-143 -33 -289 -133 -386 -265 -207 -282 -255 -785 -106 -1114 63 -140 207 -300 328 -364 182 -96 457 -97 648 -2 33 17 68 37 79 44 18 14 17 16 -5 48 -13 18 -114 160 -226 315 -112 155 -203 285 -203 288 0 3 130 5 289 5 l289 0 83 -120 c46 -66 86 -120 89 -120 12 0 51 175 62 280 22 206 -15 420 -101 595 -104 209 -262 345 -466 401 -84 22 -292 27 -374 9z"/>
+              <path d="M2430 5719 l0 -424 322 6 c336 7 371 11 464 55 124 58 193 208 181 394 -7 122 -35 191 -106 261 -103 101 -180 118 -578 126 l-283 6 0 -424z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="name">Protequ</span>
+          <span class="sub">Physical Integration Management System</span>
+        </div>
+      </div>
+
+      <h1>Adapters & <span class="accent">integrations</span></h1>
+      <p class="lead">
+        Every device, every protocol — under one operational picture.
+        Protequ ships with native adapters for CCTV, intrusion alarm and access-control systems,
+        all installed and updated through a single installer.
+      </p>
+
+      <div class="hero-meta">
+        <span><span class="dot"></span><span id="meta-published">5</span> published · <span id="meta-soon">6</span> coming soon</span>
+        <span>9 production · 2 demo</span>
+        <span>Distributed via <a href="https://repo.protequ.com" target="_blank" rel="noopener">repo.protequ.com</a></span>
+      </div>
+    </section>
+
+    <!-- ─── SEARCH ─── -->
+    <div class="search" id="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input type="search" id="search" placeholder="Search adapters — vendor, name, capability…" autocomplete="off" spellcheck="false" />
+      <button class="search-clear" id="search-clear" aria-label="Clear search">×</button>
+    </div>
+
+    <!-- ─── FILTER ─── -->
+    <nav class="filters" role="tablist" aria-label="Filter adapters">
+      <button class="filter-btn active" data-filter="all">All <span class="count" id="count-all">11</span></button>
+      <button class="filter-btn" data-filter="video">Video Surveillance <span class="count" id="count-video">3</span></button>
+      <button class="filter-btn" data-filter="intrusion">Intrusion Detection <span class="count" id="count-intrusion">5</span></button>
+      <button class="filter-btn" data-filter="access">Access Control <span class="count" id="count-access">2</span></button>
+      <button class="filter-btn" data-filter="demo">Simulators <span class="count" id="count-demo">2</span></button>
+    </nav>
+
+    <div id="sections"></div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© Protequ · Physical Integration Management System</div>
+      <div class="links">
+        <a href="https://repo.protequ.com" target="_blank" rel="noopener">Registry</a>
+        <a href="mailto:info@protequ.com">Contact</a>
+        <a href="https://www.protequ.com" target="_blank" rel="noopener">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── DATA + RENDERING ─── -->
+  <script>
+    // SVG icon library
+    const icons = {
+      video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4V8Z"/></svg>`,
+      intrusion: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>`,
+      access: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+      demo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v4l4 9a3 3 0 0 1-3 4H8a3 3 0 0 1-3-4l4-9V3Z"/><path d="M10 14h4"/></svg>`,
+      // capability chips
+      sync: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg>`,
+      firmware: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8"/><path d="m5 9 7-7 7 7"/><path d="M5 22h14"/></svg>`,
+      check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>`,
+    };
+
+    // Adapter catalog (parsed from adapter-registration.yaml).
+    // `image` is the OCI repository name in repo.protequ.com/pq (verified against /v2/_catalog).
+    // null = not yet published.
+    const adapters = [
+      // ── Video Surveillance ──
+      {
+        id: 'dahua', category: 'video', name: 'Dahua HTTP API CCTV', vendor: 'Dahua',
+        description: 'NVRs and PoE cameras via Dahua HTTP CGI v3.98 — Digest auth, live RTSP, playback, PTZ, snapshots and alarm outputs.',
+        capabilities: ['timeSync', 'rtsp', 'ptz'],
+        image: null,
+      },
+      {
+        id: 'hikvision', category: 'video', name: 'Hikvision ISAPI CCTV', vendor: 'Hikvision',
+        description: 'NVRs and DeepinMind cameras via Hikvision ISAPI REST — live & playback streaming, PTZ presets, alarm I/O, motion & analytics events.',
+        capabilities: ['timeSync', 'rtsp', 'ptz'],
+        image: 'pqhikvision',
+      },
+      // ── Intrusion Detection ──
+      {
+        id: 'jablotron', category: 'intrusion', name: 'Jablotron Intrusion', vendor: 'Jablotron',
+        description: 'JA-101K / JA-103K / JA-107K central units via the JA-121T RS-485→TCP bridge. Push events, arming, PG outputs and peripheral state.',
+        capabilities: ['partitions', 'outputs'],
+        image: null,
+      },
+      {
+        id: 'gxysmart', category: 'intrusion', name: 'Ademco Galaxy Gxy Smart', vendor: 'Ademco CZ',
+        description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.',
+        capabilities: ['timeSync', 'partitions', 'access'],
+        image: 'pqademco',
+      },
+      {
+        id: 'vista', category: 'intrusion', name: 'Honeywell Vista 128/250BPT', vendor: 'Honeywell',
+        description: 'Vista 128BPT and 250BPT alarm panels over RS232→TCP — ASCII line protocol, 8 partitions, up to 250 zones, keypad and output control.',
+        capabilities: ['timeSync', 'partitions', 'outputs'],
+        image: null,
+      },
+      {
+        id: 'paradox', category: 'intrusion', name: 'Paradox EVO Series', vendor: 'Paradox',
+        description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.',
+        capabilities: ['timeSync', 'partitions', 'outputs'],
+        image: 'pqparadox',
+      },
+      {
+        id: 'dominus', category: 'intrusion', name: 'Abbas Dominus3', vendor: 'Abbas',
+        description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.',
+        capabilities: ['partitions', 'access'],
+        image: null,
+      },
+      // ── Access Control ──
+      {
+        id: 'hid-aero', category: 'access', name: 'HID Aero X1100', vendor: 'HID Global',
+        description: 'X1100 intelligent controller with X100/X200/X300 SIO modules — OSDP & Wiegand readers, monitor & control points, anti-passback, TLS and AES-encrypted RS-485.',
+        capabilities: ['timeSync', 'firmware', 'access', 'osdp'],
+        image: null,
+      },
+      {
+        id: 'biostation3', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema',
+        description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.',
+        capabilities: ['timeSync', 'biometric', 'access'],
+        image: 'pqsuprema',
+      },
+      // ── Simulators ──
+      {
+        id: 'sim', category: 'demo', name: 'PQ Simulator', vendor: 'Protequ', demo: true,
+        description: 'In-memory access-control simulator with doors, readers, relays, partitions and detectors. Drives Intrusion / Fire-Panic / Access-Rush scenarios — no hardware required.',
+        capabilities: ['partitions', 'access', 'outputs'],
+        image: null,
+      },
+      {
+        id: 'cctv-sim', category: 'demo', name: 'CCTV Simulator', vendor: 'Protequ', demo: true,
+        description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.',
+        capabilities: ['ptz', 'analytics'],
+        image: 'pqcctvsim',
+      },
+    ];
+
+    const categories = [
+      { key: 'video',     title: 'Video Surveillance',  desc: 'NVRs and IP cameras. Live & playback streaming, PTZ, motion and analytics.',  icon: 'video' },
+      { key: 'intrusion', title: 'Intrusion Detection', desc: 'Alarm panels, partitions, zones and outputs. Arm / disarm, bypass, event logs.', icon: 'intrusion' },
+      { key: 'access',    title: 'Access Control',      desc: 'Controllers, readers and biometric terminals. Card, PIN, face and OSDP.',     icon: 'access' },
+      { key: 'demo',      title: 'Simulators & Demos',  desc: 'Pure-software adapters that exercise the full event and command surface — no hardware needed.', icon: 'demo' },
+    ];
+
+    const capLabels = {
+      timeSync:    { label: 'Time sync',         icon: 'sync' },
+      rtsp:        { label: 'RTSP streaming',    icon: 'check' },
+      ptz:         { label: 'PTZ',               icon: 'check' },
+      firmware:    { label: 'Firmware update',   icon: 'firmware' },
+      partitions:  { label: 'Partitions',        icon: 'check' },
+      outputs:     { label: 'Relay outputs',     icon: 'check' },
+      access:      { label: 'Access control',    icon: 'check' },
+      biometric:   { label: 'Biometric',         icon: 'check' },
+      osdp:        { label: 'OSDP',              icon: 'check' },
+      analytics:   { label: 'Analytics',         icon: 'check' },
+    };
+
+    const registryHost = 'repo.protequ.com/pq';
+
+    function renderCard(a) {
+      const chips = (a.capabilities || []).map(c => {
+        const meta = capLabels[c];
+        if (!meta) return '';
+        return `<span class="chip">${icons[meta.icon] || ''}${meta.label}</span>`;
+      }).join('');
+
+      const action = a.image
+        ? (() => {
+            const pull = `docker pull ${registryHost}/${a.image}:latest`;
+            return `<div class="pull-cmd" data-cmd="${pull}" title="Click to copy">${pull}</div>`;
+          })()
+        : `<div class="soon">Coming soon</div>`;
+
+      return `
+        <article class="card" data-category="${a.category}">
+          <div class="card-top">
+            <div class="icon-tile">${icons[a.category]}</div>
+            <div class="card-title">
+              <span class="vendor">${a.vendor}</span>
+              <h3>${a.name}</h3>
+            </div>
+            ${a.demo ? '<span class="badge-demo">Demo</span>' : ''}
+          </div>
+          <p class="card-desc">${a.description}</p>
+          <div class="chips">${chips}</div>
+          <div class="card-bottom">
+            ${action}
+          </div>
+        </article>
+      `;
+    }
+
+    // UI state
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    function matchesQuery(a, q) {
+      if (!q) return true;
+      const needle = q.toLowerCase();
+      const haystack = [
+        a.name, a.vendor, a.description,
+        ...(a.capabilities || []).map(c => (capLabels[c]?.label || c)),
+        a.demo ? 'demo simulator' : '',
+        a.category,
+      ].join(' ').toLowerCase();
+      // Multi-word AND search
+      return needle.split(/\s+/).filter(Boolean).every(t => haystack.includes(t));
+    }
+
+    function renderSections() {
+      const root = document.getElementById('sections');
+      const filtered = adapters.filter(a =>
+        (activeFilter === 'all' || activeFilter === a.category) &&
+        matchesQuery(a, searchQuery)
+      );
+
+      // Update filter-bar counts to reflect search scope (count within current query, per category)
+      const queryCounts = adapters.reduce((m, a) => {
+        if (!matchesQuery(a, searchQuery)) return m;
+        m.all = (m.all || 0) + 1;
+        m[a.category] = (m[a.category] || 0) + 1;
+        return m;
+      }, {});
+      document.getElementById('count-all').textContent = queryCounts.all || 0;
+      document.getElementById('count-video').textContent = queryCounts.video || 0;
+      document.getElementById('count-intrusion').textContent = queryCounts.intrusion || 0;
+      document.getElementById('count-access').textContent = queryCounts.access || 0;
+      document.getElementById('count-demo').textContent = queryCounts.demo || 0;
+
+      if (!filtered.length) {
+        root.innerHTML = `
+          <div class="empty-state">
+            <strong>No adapters match your search.</strong>
+            Try a vendor (<code>Hikvision</code>), a category (<code>access</code>) or a capability (<code>OSDP</code>).
+          </div>`;
+        return;
+      }
+
+      root.innerHTML = categories.map(c => {
+        const list = filtered.filter(a => a.category === c.key);
+        if (!list.length) return '';
+        return `
+          <section class="section" data-section="${c.key}">
+            <header class="section-head">
+              <h2>${icons[c.icon]}${c.title}</h2>
+              <span class="desc">${c.desc}</span>
+            </header>
+            <div class="grid">
+              ${list.map(renderCard).join('')}
+            </div>
+          </section>
+        `;
+      }).join('');
+
+      // Wire copy-to-clipboard
+      document.querySelectorAll('.pull-cmd').forEach(el => {
+        el.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(el.dataset.cmd);
+            el.classList.add('copied');
+            setTimeout(() => el.classList.remove('copied'), 1400);
+          } catch { /* clipboard blocked — silently ignore */ }
+        });
+      });
+    }
+
+    // Filter wiring
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderSections();
+      });
+    });
+
+    // Search wiring
+    const searchInput = document.getElementById('search');
+    const searchWrap  = document.getElementById('search-wrap');
+    const searchClear = document.getElementById('search-clear');
+    searchInput.addEventListener('input', e => {
+      searchQuery = e.target.value.trim();
+      searchWrap.classList.toggle('has-value', searchQuery.length > 0);
+      renderSections();
+    });
+    searchClear.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      searchWrap.classList.remove('has-value');
+      searchInput.focus();
+      renderSections();
+    });
+    // Keyboard: Esc to clear, / to focus
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.value = '';
+        searchQuery = '';
+        searchWrap.classList.remove('has-value');
+        renderSections();
+      }
+    });
+
+    // Hero meta counts (published / coming-soon — independent of filters)
+    const published = adapters.filter(a => a.image).length;
+    document.getElementById('meta-published').textContent = published;
+    document.getElementById('meta-soon').textContent = adapters.length - published;
+
+    renderSections();
+  </script>
+</body>
+</html>
