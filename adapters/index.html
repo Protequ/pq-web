@@ -342,51 +342,6 @@
     }
     .chip svg { width: 11px; height: 11px; }
 
-    .card-bottom {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding-top: 12px;
-      border-top: 1px dashed var(--line);
-    }
-    .pull-cmd {
-      flex: 1;
-      min-width: 0;
-      font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
-      font-size: 11.5px;
-      color: var(--text-dim);
-      background: var(--bg-0);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 7px 10px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: border-color 0.15s ease, color 0.15s ease;
-    }
-    .pull-cmd::before {
-      content: "$ ";
-      color: var(--text-faint);
-    }
-    .pull-cmd:hover { border-color: var(--accent-dim); color: var(--text); }
-    .pull-cmd.copied { border-color: var(--ok); color: var(--ok); }
-    .pull-cmd.copied::before { content: "✓ "; color: var(--ok); }
-
-    .soon {
-      flex: 1;
-      font-size: 11.5px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      background: rgba(255,255,255,0.02);
-      border: 1px dashed var(--line);
-      border-radius: 8px;
-      padding: 8px 10px;
-      text-align: center;
-    }
-
     /* ─── FOOTER ─────────────────────────────────────────────── */
     footer {
       margin-top: 96px;
@@ -443,9 +398,8 @@
       </p>
 
       <div class="hero-meta">
-        <span><span class="dot"></span><span id="meta-published">5</span> published · <span id="meta-soon">6</span> coming soon</span>
+        <span><span class="dot"></span>11 native integrations</span>
         <span>9 production · 2 demo</span>
-        <span>Distributed via <a href="https://repo.protequ.com" target="_blank" rel="noopener">repo.protequ.com</a></span>
       </div>
     </section>
 
@@ -593,21 +547,12 @@
       analytics:   { label: 'Analytics',         icon: 'check' },
     };
 
-    const registryHost = 'repo.protequ.com/pq';
-
     function renderCard(a) {
       const chips = (a.capabilities || []).map(c => {
         const meta = capLabels[c];
         if (!meta) return '';
         return `<span class="chip">${icons[meta.icon] || ''}${meta.label}</span>`;
       }).join('');
-
-      const action = a.image
-        ? (() => {
-            const pull = `docker pull ${registryHost}/${a.image}:latest`;
-            return `<div class="pull-cmd" data-cmd="${pull}" title="Click to copy">${pull}</div>`;
-          })()
-        : `<div class="soon">Coming soon</div>`;
 
       return `
         <article class="card" data-category="${a.category}">
@@ -621,9 +566,6 @@
           </div>
           <p class="card-desc">${a.description}</p>
           <div class="chips">${chips}</div>
-          <div class="card-bottom">
-            ${action}
-          </div>
         </article>
       `;
     }
@@ -689,17 +631,6 @@
           </section>
         `;
       }).join('');
-
-      // Wire copy-to-clipboard
-      document.querySelectorAll('.pull-cmd').forEach(el => {
-        el.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(el.dataset.cmd);
-            el.classList.add('copied');
-            setTimeout(() => el.classList.remove('copied'), 1400);
-          } catch { /* clipboard blocked — silently ignore */ }
-        });
-      });
     }
 
     // Filter wiring
@@ -740,11 +671,6 @@
         renderSections();
       }
     });
-
-    // Hero meta counts (published / coming-soon — independent of filters)
-    const published = adapters.filter(a => a.image).length;
-    document.getElementById('meta-published').textContent = published;
-    document.getElementById('meta-soon').textContent = adapters.length - published;
 
     renderSections();
   </script>
