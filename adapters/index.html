@@ -451,80 +451,20 @@
       check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>`,
     };
 
-    // Adapter catalog (parsed from adapter-registration.yaml).
-    // `image` is the OCI repository name in repo.protequ.com/pq (verified against /v2/_catalog).
-    // null = not yet published.
+    // Adapter catalog — injected from .github/data/adapters.yaml by
+    // .github/scripts/build-adapters-page.mjs at build time.
     const adapters = [
-      // ── Video Surveillance ──
-      {
-        id: 'dahua', category: 'video', name: 'Dahua HTTP API CCTV', vendor: 'Dahua',
-        description: 'NVRs and PoE cameras via Dahua HTTP CGI v3.98 — Digest auth, live RTSP, playback, PTZ, snapshots and alarm outputs.',
-        capabilities: ['timeSync', 'rtsp', 'ptz'],
-        image: null,
-      },
-      {
-        id: 'hikvision', category: 'video', name: 'Hikvision ISAPI CCTV', vendor: 'Hikvision',
-        description: 'NVRs and DeepinMind cameras via Hikvision ISAPI REST — live & playback streaming, PTZ presets, alarm I/O, motion & analytics events.',
-        capabilities: ['timeSync', 'rtsp', 'ptz'],
-        image: 'pqhikvision',
-      },
-      // ── Intrusion Detection ──
-      {
-        id: 'jablotron', category: 'intrusion', name: 'Jablotron Intrusion', vendor: 'Jablotron',
-        description: 'JA-101K / JA-103K / JA-107K central units via the JA-121T RS-485→TCP bridge. Push events, arming, PG outputs and peripheral state.',
-        capabilities: ['partitions', 'outputs'],
-        image: null,
-      },
-      {
-        id: 'gxysmart', category: 'intrusion', name: 'Ademco Galaxy Gxy Smart', vendor: 'Ademco CZ',
-        description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.',
-        capabilities: ['timeSync', 'partitions', 'access'],
-        image: 'pqademco',
-      },
-      {
-        id: 'vista', category: 'intrusion', name: 'Honeywell Vista 128/250BPT', vendor: 'Honeywell',
-        description: 'Vista 128BPT and 250BPT alarm panels over RS232→TCP — ASCII line protocol, 8 partitions, up to 250 zones, keypad and output control.',
-        capabilities: ['timeSync', 'partitions', 'outputs'],
-        image: null,
-      },
-      {
-        id: 'paradox', category: 'intrusion', name: 'Paradox EVO Series', vendor: 'Paradox',
-        description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.',
-        capabilities: ['timeSync', 'partitions', 'outputs'],
-        image: 'pqparadox',
-      },
-      {
-        id: 'dominus', category: 'intrusion', name: 'Abbas Dominus3', vendor: 'Abbas',
-        description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.',
-        capabilities: ['partitions', 'access'],
-        image: null,
-      },
-      // ── Access Control ──
-      {
-        id: 'hid-aero', category: 'access', name: 'HID Aero X1100', vendor: 'HID Global',
-        description: 'X1100 intelligent controller with X100/X200/X300 SIO modules — OSDP & Wiegand readers, monitor & control points, anti-passback, TLS and AES-encrypted RS-485.',
-        capabilities: ['timeSync', 'firmware', 'access', 'osdp'],
-        image: null,
-      },
-      {
-        id: 'biostation3', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema',
-        description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.',
-        capabilities: ['timeSync', 'biometric', 'access'],
-        image: 'pqsuprema',
-      },
-      // ── Simulators ──
-      {
-        id: 'sim', category: 'demo', name: 'PQ Simulator', vendor: 'Protequ', demo: true,
-        description: 'In-memory access-control simulator with doors, readers, relays, partitions and detectors. Drives Intrusion / Fire-Panic / Access-Rush scenarios — no hardware required.',
-        capabilities: ['partitions', 'access', 'outputs'],
-        image: null,
-      },
-      {
-        id: 'cctv-sim', category: 'demo', name: 'CCTV Simulator', vendor: 'Protequ', demo: true,
-        description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.',
-        capabilities: ['ptz', 'analytics'],
-        image: 'pqcctvsim',
-      },
+      { id: 'dahua', category: 'video', name: 'Dahua HTTP API CCTV', vendor: 'Dahua', description: 'NVRs and PoE cameras via Dahua HTTP CGI v3.98 — Digest auth, live RTSP, playback, PTZ, snapshots and alarm outputs.', capabilities: ['timeSync', 'rtsp', 'ptz'] },
+      { id: 'hikvision', category: 'video', name: 'Hikvision ISAPI CCTV', vendor: 'Hikvision', description: 'NVRs and DeepinMind cameras via Hikvision ISAPI REST — live & playback streaming, PTZ presets, alarm I/O, motion & analytics events.', capabilities: ['timeSync', 'rtsp', 'ptz'] },
+      { id: 'jablotron', category: 'intrusion', name: 'Jablotron Intrusion', vendor: 'Jablotron', description: 'JA-101K / JA-103K / JA-107K central units via the JA-121T RS-485→TCP bridge. Push events, arming, PG outputs and peripheral state.', capabilities: ['partitions', 'outputs'] },
+      { id: 'gxysmart', category: 'intrusion', name: 'Ademco Galaxy Gxy Smart', vendor: 'Ademco CZ', description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.', capabilities: ['timeSync', 'partitions', 'access'] },
+      { id: 'vista', category: 'intrusion', name: 'Honeywell Vista 128/250BPT', vendor: 'Honeywell', description: 'Vista 128BPT and 250BPT alarm panels over RS232→TCP — ASCII line protocol, 8 partitions, up to 250 zones, keypad and output control.', capabilities: ['timeSync', 'partitions', 'outputs'] },
+      { id: 'paradox', category: 'intrusion', name: 'Paradox EVO Series', vendor: 'Paradox', description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.', capabilities: ['timeSync', 'partitions', 'outputs'] },
+      { id: 'dominus', category: 'intrusion', name: 'Abbas Dominus3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
+      { id: 'hid-aero', category: 'access', name: 'HID Aero X1100', vendor: 'HID Global', description: 'X1100 intelligent controller with X100/X200/X300 SIO modules — OSDP & Wiegand readers, monitor & control points, anti-passback, TLS and AES-encrypted RS-485.', capabilities: ['timeSync', 'firmware', 'access', 'osdp'] },
+      { id: 'biostation3', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema', description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.', capabilities: ['timeSync', 'biometric', 'access'] },
+      { id: 'sim', category: 'demo', name: 'PQ Simulator', vendor: 'Protequ', demo: true, description: 'In-memory access-control simulator with doors, readers, relays, partitions and detectors. Drives Intrusion / Fire-Panic / Access-Rush scenarios — no hardware required.', capabilities: ['partitions', 'access', 'outputs'] },
+      { id: 'cctv-sim', category: 'demo', name: 'CCTV Simulator', vendor: 'Protequ', demo: true, description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.', capabilities: ['ptz', 'analytics'] },
     ];
 
     const categories = [
