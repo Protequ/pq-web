@@ -450,17 +450,17 @@
     // registry by .github/scripts/build-adapters-page.mjs at build time.
     // Each adapter's `category` is the org.protequ.category OCI label.
     const adapters = [
-      { id: 'pqdominus', category: 'intrusion', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Abbas Dominus 3 intrusion and access control panel via Outdom2Client SDK', capabilities: [] },
-      { id: 'pqademco', category: 'intrusion', name: 'Ademco Galaxy Smart', vendor: 'Honeywell Ademco', description: 'Honeywell Ademco Galaxy Smart intrusion and access control panel', capabilities: [] },
-      { id: 'pqcctvsim', category: 'cctv', name: 'CCTV Simulator', vendor: 'Protequ', description: 'Virtual CCTV adapter for demos and testing without real hardware', capabilities: [] },
-      { id: 'pqdahua', category: 'cctv', name: 'Dahua CCTV/NVR', vendor: 'Dahua Technology', description: 'HTTP CGI integration for Dahua cameras and NVRs', capabilities: [] },
-      { id: 'pqhidaero', category: 'access', name: 'HID Aero', vendor: 'HID Global', description: 'HID Aero X1100 access control panels with SIO modules', capabilities: [] },
-      { id: 'pqhikvision', category: 'cctv', name: 'Hikvision CCTV', vendor: 'Hikvision Digital Technology', description: 'HTTP ISAPI integration for Hikvision IP cameras and NVRs', capabilities: [] },
-      { id: 'pqhoneywell', category: 'intrusion', name: 'Honeywell Vista', vendor: 'Honeywell', description: 'Honeywell Vista 128BPT/250BPT intrusion alarm panels via RS232-to-TCP', capabilities: [] },
-      { id: 'pqjablotron', category: 'intrusion', name: 'Jablotron JA-121T', vendor: 'Jablotron Alarms', description: 'Jablotron alarm panels via JA-121T RS-485 bridge over TCP', capabilities: [] },
+      { id: 'pqdominus', category: 'intrusion', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
+      { id: 'pqademco', category: 'intrusion', name: 'Ademco Galaxy Smart', vendor: 'Honeywell Ademco', description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.', capabilities: ['timeSync', 'partitions', 'access'] },
+      { id: 'pqcctvsim', category: 'cctv', name: 'CCTV Simulator', vendor: 'Protequ', demo: true, description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.', capabilities: ['ptz', 'analytics'] },
+      { id: 'pqdahua', category: 'cctv', name: 'Dahua CCTV/NVR', vendor: 'Dahua Technology', description: 'NVRs and PoE cameras via Dahua HTTP CGI v3.98 — Digest auth, live RTSP, playback, PTZ, snapshots and alarm outputs.', capabilities: ['timeSync', 'rtsp', 'ptz'] },
+      { id: 'pqhidaero', category: 'access', name: 'HID Aero', vendor: 'HID Global', description: 'X1100 intelligent controller with X100/X200/X300 SIO modules — OSDP & Wiegand readers, monitor & control points, anti-passback, TLS and AES-encrypted RS-485.', capabilities: ['timeSync', 'firmware', 'access', 'osdp'] },
+      { id: 'pqhikvision', category: 'cctv', name: 'Hikvision CCTV', vendor: 'Hikvision Digital Technology', description: 'NVRs and DeepinMind cameras via Hikvision ISAPI REST — live & playback streaming, PTZ presets, alarm I/O, motion & analytics events.', capabilities: ['timeSync', 'rtsp', 'ptz'] },
+      { id: 'pqhoneywell', category: 'intrusion', name: 'Honeywell Vista', vendor: 'Honeywell', description: 'Vista 128BPT and 250BPT alarm panels over RS232 to TCP — ASCII line protocol, 8 partitions, up to 250 zones, keypad and output control.', capabilities: ['timeSync', 'partitions', 'outputs'] },
+      { id: 'pqjablotron', category: 'intrusion', name: 'Jablotron JA-121T', vendor: 'Jablotron Alarms', description: 'JA-101K / JA-103K / JA-107K central units via the JA-121T RS-485 to TCP bridge — push events, arming, PG outputs and peripheral state.', capabilities: ['partitions', 'outputs'] },
       { id: 'pqmonitor', category: 'module', name: 'Monitoring & Visualization', vendor: 'Protequ', description: 'Centralized monitoring and visualization dashboard for PQ', capabilities: [] },
-      { id: 'pqparadox', category: 'intrusion', name: 'Paradox EVO', vendor: 'Paradox Security', description: 'Paradox EVO48/EVO64/EVO192 intrusion panels via IP150 module', capabilities: [] },
-      { id: 'pqsuprema', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema', description: 'Suprema biometric access control terminal via G-SDK gateway', capabilities: [] },
+      { id: 'pqparadox', category: 'intrusion', name: 'Paradox EVO', vendor: 'Paradox Security', description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.', capabilities: ['timeSync', 'partitions', 'outputs'] },
+      { id: 'pqsuprema', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema', description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.', capabilities: ['timeSync', 'biometric', 'access'] },
     ];
 
     // Presentation metadata per registry category. Categories present in the
