@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protequ — Linux Online Setup Quick Guide</title>
+  <meta name="description" content="Protequ Physical Integration Management System — Linux online setup quick guide. One command installs Docker, pulls all images and brings up the PQ platform on Ubuntu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0:        #1a1b22;
+      --bg-1:        rgb(35, 36, 44);
+      --bg-2:        rgb(50, 51, 61);
+      --line:        rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text:        #f1f3f6;
+      --text-dim:    #a3a8b3;
+      --text-faint:  #6c7180;
+      --accent:      #00b0f0;            /* PQ glow */
+      --accent-dim:  rgba(0, 176, 240, 0.18);
+      --accent-soft: rgba(0, 176, 240, 0.08);
+      --brand-pink:  #FFAAAA;            /* logo lock */
+      --ok:          #4caf50;
+      --warn:        #F9A825;
+      --warn-soft:   rgba(249, 168, 37, 0.10);
+      --warn-dim:    rgba(249, 168, 37, 0.32);
+      --info:        #1565C0;
+      --font-sans:   'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono:   ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-0);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-feature-settings: 'cv11', 'ss01';
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      line-height: 1.6;
+    }
+
+    body {
+      background:
+        radial-gradient(1100px 540px at 20% -10%, rgba(0,176,240,0.10), transparent 60%),
+        radial-gradient(900px 480px at 95% 0%, rgba(255,170,170,0.07), transparent 65%),
+        var(--bg-0);
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code, kbd {
+      font-family: var(--font-mono);
+      font-size: 0.86em;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 1px 6px;
+      color: var(--text);
+      word-break: break-word;
+    }
+    kbd {
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+      font-weight: 600;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero { padding: 80px 0 40px; position: relative; }
+    .brand-row { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+    .brand-mark {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, #fff 65%, transparent 66%);
+      box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.5);
+      animation: pq-glow 2s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    @keyframes pq-glow {
+      0%, 100% { box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.45); }
+      50%      { box-shadow: 0 0 22px 10px rgba(0, 176, 240, 0.8); }
+    }
+    .brand-mark svg { width: 100%; height: 100%; display: block; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text .name { font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+    .brand-text .sub  { font-weight: 500; font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+      padding: 6px 12px; border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    .eyebrow svg { width: 13px; height: 13px; }
+
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 60px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin: 0 0 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #c8cdd6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 .accent { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+
+    .hero p.lead {
+      font-size: clamp(16px, 1.5vw, 19px);
+      color: var(--text-dim);
+      max-width: 680px;
+      margin: 0 0 28px;
+    }
+
+    .hero-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 8px 28px; align-items: center;
+      font-size: 13px; color: var(--text-faint);
+    }
+    .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); display: inline-block; margin-right: 8px; box-shadow: 0 0 8px var(--ok); }
+
+    /* ─── PREREQ TABLE / SPEC ────────────────────────────────── */
+    .section { margin: 56px 0; }
+    .section > h2 {
+      margin: 0 0 8px;
+      font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section > h2 svg { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; }
+    .section > .sub { color: var(--text-faint); font-size: 13.5px; margin: 0 0 24px; padding-left: 34px; }
+
+    table.spec {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 14px;
+      background: linear-gradient(180deg, var(--bg-1) 0%, rgba(35,36,44,0.6) 100%);
+    }
+    table.spec th {
+      text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 13px 18px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--line);
+    }
+    table.spec td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+    table.spec tr:last-child td { border-bottom: 0; }
+    table.spec td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; width: 1%; }
+    table.spec td.sub-row { color: var(--text-dim); font-weight: 400; }
+    table.spec .hl { color: var(--accent); font-weight: 700; }
+
+    .note {
+      margin-top: 14px;
+      font-size: 13px; color: var(--text-faint);
+      padding-left: 4px;
+    }
+
+    /* ─── CALLOUT ────────────────────────────────────────────── */
+    .callout {
+      display: flex; gap: 14px;
+      margin: 22px 0;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--warn-dim);
+      background: var(--warn-soft);
+    }
+    .callout .ico {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(249,168,37,0.16);
+      color: var(--warn);
+    }
+    .callout .ico svg { width: 17px; height: 17px; }
+    .callout .body { font-size: 14px; color: var(--text); }
+    .callout .body strong { color: var(--warn); }
+    .callout .body p { margin: 0 0 8px; }
+    .callout .body p:last-child { margin-bottom: 0; }
+    .callout .body .crumbs { color: var(--text); }
+
+    /* ─── STEPS ──────────────────────────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 20px;
+      padding: 24px;
+      background: linear-gradient(180deg, var(--bg-1) 0%, rgba(35,36,44,0.6) 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .step::before {
+      content: "";
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: radial-gradient(420px 200px at 100% 0%, rgba(0,176,240,0.07), transparent 65%);
+    }
+    .step:hover { border-color: var(--line-strong); box-shadow: 0 10px 30px -14px rgba(0,0,0,0.6); }
+    .step .num {
+      grid-row: 1 / span 2;
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+    }
+    .step .step-body { min-width: 0; }
+    .step h3 {
+      margin: 4px 0 10px;
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .step p { margin: 0 0 12px; color: var(--text-dim); font-size: 14.5px; }
+    .step p:last-child { margin-bottom: 0; }
+    .step strong { color: var(--text); font-weight: 600; }
+
+    /* screenshot + caption split */
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: center;
+      margin: 16px 0 4px;
+    }
+    .row.solo { grid-template-columns: 1fr; max-width: 560px; }
+    .shot {
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      overflow: hidden;
+      box-shadow: 0 14px 36px -16px rgba(0,0,0,0.8);
+      background: var(--bg-0);
+      line-height: 0;
+    }
+    .shot img { width: 100%; height: auto; display: block; }
+    .caption { font-size: 13.5px; color: var(--text-dim); }
+    .caption p { margin: 0 0 10px; }
+    .caption p:last-child { margin-bottom: 0; }
+
+    /* credentials block */
+    .creds {
+      margin-top: 12px;
+      display: grid; gap: 6px;
+      font-size: 13px;
+    }
+    .creds .kv { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .creds .kv .lbl { color: var(--text-faint); min-width: 130px; }
+
+    /* duration list */
+    table.spec.timing td:last-child { color: var(--accent); font-weight: 600; white-space: nowrap; }
+    table.spec.timing td:first-child { color: var(--text-dim); font-weight: 500; white-space: normal; width: auto; }
+
+    /* troubleshooting */
+    table.spec.trouble td:first-child { color: var(--text); font-weight: 600; white-space: normal; width: 42%; }
+
+    .meta-files {
+      margin-top: 18px;
+      display: grid; gap: 8px;
+      font-size: 13px; color: var(--text-dim);
+    }
+    .meta-files .row-line { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .meta-files .row-line strong { color: var(--text); font-weight: 600; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      margin-top: 96px;
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--line);
+      color: var(--text-faint);
+      font-size: 13px;
+    }
+    footer .container {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    footer .links { display: flex; gap: 20px; }
+    footer .links a { color: var(--text-dim); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero { padding: 56px 0 28px; }
+      .row { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; gap: 14px; }
+      .step .num { grid-row: auto; width: 44px; height: 44px; font-size: 18px; border-radius: 12px; }
+      .section > .sub { padding-left: 0; }
+      table.spec td:first-child { white-space: normal; }
+    }
+
+    /* ─── COMMAND BLOCK (Linux CLI guide) ────────────────────── */
+    .cmd {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin: 14px 0 4px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: var(--bg-0);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .cmd::before {
+      content: "$";
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .cmd code {
+      background: none; border: 0; padding: 0;
+      color: var(--text); white-space: pre;
+      font-size: inherit;
+    }
+    .cmd .cmt { color: var(--text-faint); }
+    .cmd.multi { display: block; }
+    .cmd.multi::before { content: none; }
+    .cmd.multi code { display: block; white-space: pre; }
+  </style>
+</head>
+<body>
+  <main class="container">
+
+    <!-- ─── HERO ─── -->
+    <section class="hero">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">
+          <!-- Real PQ logo from src/Pq.Client.App/wwwroot/img/pq.logo.svg -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0,1024) scale(0.1,-0.1)" fill="#000" stroke="none">
+              <path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0 -5120z m7320 1715 c259 -32 531 -95 848 -197 l193 -62 -4 -721 c-3 -624 -6 -733 -21 -815 -52 -290 -136 -491 -306 -733 -77 -110 -351 -388 -490 -498 -108 -86 -259 -193 -264 -188 -71 84 -207 251 -204 253 43 25 260 199 339 273 296 275 447 485 534 746 66 198 67 212 72 848 l4 576 -178 51 c-345 100 -656 150 -878 139 -120 -6 -330 -42 -414 -72 -24 -8 -47 -15 -51 -15 -4 0 -52 37 -106 81 -55 45 -116 93 -136 108 -21 14 -38 29 -38 33 0 14 146 93 230 124 88 34 246 68 385 84 103 11 326 5 485 -15z m-1745 -145 c297 -28 532 -127 743 -313 372 -327 538 -866 442 -1432 -30 -177 -108 -388 -191 -517 -19 -29 -28 -52 -23 -60 5 -7 139 -194 300 -414 160 -221 294 -406 297 -411 4 -6 -26 -27 -66 -48 l-73 -38 -134 73 c-277 150 -429 258 -577 407 l-102 104 -88 -53 c-147 -89 -310 -145 -491 -169 -110 -15 -352 -7 -450 15 -230 50 -482 184 -619 327 -124 131 -260 354 -321 529 -147 421 -117 912 80 1304 59 117 104 186 181 274 270 310 664 462 1092 422z m-2450 -30 c298 -34 535 -168 685 -385 48 -70 108 -202 131 -290 47 -180 34 -431 -32 -623 -91 -270 -314 -468 -618 -550 -94 -25 -105 -26 -478 -30 l-383 -4 0 -464 0 -464 -273 0 c-199 0 -276 3 -285 12 -9 9 -12 335 -12 1403 0 766 3 1395 7 1398 11 11 1159 8 1258 -3z"/>
+              <path d="M5281 6155 c-143 -33 -289 -133 -386 -265 -207 -282 -255 -785 -106 -1114 63 -140 207 -300 328 -364 182 -96 457 -97 648 -2 33 17 68 37 79 44 18 14 17 16 -5 48 -13 18 -114 160 -226 315 -112 155 -203 285 -203 288 0 3 130 5 289 5 l289 0 83 -120 c46 -66 86 -120 89 -120 12 0 51 175 62 280 22 206 -15 420 -101 595 -104 209 -262 345 -466 401 -84 22 -292 27 -374 9z"/>
+              <path d="M2430 5719 l0 -424 322 6 c336 7 371 11 464 55 124 58 193 208 181 394 -7 122 -35 191 -106 261 -103 101 -180 118 -578 126 l-283 6 0 -424z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="name">Protequ</span>
+          <span class="sub">Physical Integration Management System</span>
+        </div>
+      </div>
+
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+        Online setup · Ubuntu · ~10 minutes
+      </span>
+
+      <h1>Get the PQ platform <span class="accent">running</span></h1>
+      <p class="lead">
+        Run one command on your Ubuntu server. Docker Engine and every application image are
+        installed and pulled automatically — no manual configuration.
+      </p>
+
+      <div class="hero-meta">
+        <span><span class="dot"></span>6 steps · fully automated</span>
+        <span>Ubuntu 22.04 / 24.04 LTS · 64-bit</span>
+        <span>PQ Platform v1.0.0</span>
+      </div>
+    </section>
+
+    <!-- ─── PREREQUISITES ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Prerequisites
+      </h2>
+      <p class="sub">The installer checks these automatically before it proceeds.</p>
+
+      <table class="spec">
+        <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>OS</td><td>Ubuntu 24.04 LTS — recommended</td></tr>
+          <tr><td></td><td class="sub-row">Ubuntu 22.04 LTS — supported</td></tr>
+          <tr><td>Architecture</td><td>64-bit (amd64) only</td></tr>
+          <tr><td>RAM</td><td><span class="hl">16 GB minimum</span></td></tr>
+          <tr><td>Disk</td><td>100 GB free space (Small tier)</td></tr>
+          <tr><td>Virtualization</td><td>Not required — Docker runs natively on the Linux kernel (no WSL2 / Hyper-V)</td></tr>
+          <tr><td>Internet</td><td>Required — Docker and images are pulled from <code>repo.protequ.com</code> during setup</td></tr>
+          <tr><td>Privileges</td><td>Root — launch the installer with <code>sudo</code></td></tr>
+        </tbody>
+      </table>
+      <p class="note">Unsupported OS versions are rejected; low RAM shows a warning. Ports 443 and 8555 must be reachable from operator devices.</p>
+    </section>
+
+    <!-- ─── STEPS ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        Installation
+      </h2>
+      <p class="sub">Six steps, start to finish. Most of it runs on its own.</p>
+
+      <div class="steps">
+
+        <!-- Step 1 -->
+        <article class="step">
+          <div class="num">1</div>
+          <div class="step-body">
+            <h3>Run the install command</h3>
+            <p>On the server host, run the one-liner below. It downloads the installer and the compose bundle from <code>repo.protequ.com</code> and launches it as root.</p>
+            <div class="cmd"><code>curl -fsSL https://repo.protequ.com/online_installer/linux/run.sh | sudo bash</code></div>
+            <div class="callout">
+              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+              <div class="body">
+                <p><strong>Run as root.</strong></p>
+                <p>The installer enables the Docker service, writes the compose stack to <code>/opt/pq</code>, and opens firewall ports — all of which require root. Piping to <code>sudo bash</code> handles this.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="step">
+          <div class="num">2</div>
+          <div class="step-body">
+            <h3>Preflight &amp; Docker Engine</h3>
+            <p>The installer checks the OS, RAM, architecture, and busy ports. If <strong>Docker Engine</strong> is missing it adds Docker’s official apt repository, installs <code>docker-ce</code> and the compose plugin, and enables the <code>docker</code> service. No reboot is required.</p>
+          </div>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="step">
+          <div class="num">3</div>
+          <div class="step-body">
+            <h3>Network access</h3>
+            <p>Answer how operator devices reach this host. The detected hostname / LAN IP is offered as the default — press <kbd>Enter</kbd> to accept or type your own.</p>
+            <div class="caption">
+              <p><strong>Host name or IP</strong> — clients open <code>https://&lt;host&gt;/</code>.</p>
+              <p><strong>Port</strong> — defaults to <code>443</code>; set e.g. <code>8443</code> if 443 is taken.</p>
+              <p><strong>Additional names / IPs</strong> — optional extra SANs added to the certificate and the login allowlist.</p>
+              <p><strong>Own TLS certificate</strong> — optionally supply your own cert + key instead of the auto-generated one.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="step">
+          <div class="num">4</div>
+          <div class="step-body">
+            <h3>Server components &amp; adapters</h3>
+            <p>The core services (PQ Server, go2rtc, Keycloak, NATS JetStream, PostgreSQL) are always deployed. Then choose the device integrations from the live catalog — a multiselect list you tick through.</p>
+            <p>For unattended runs, select adapters on the command line instead:</p>
+            <div class="cmd multi"><code>sudo bash run.sh --adapters hikvision,hid-aero   <span class="cmt"># specific adapters</span>
+sudo bash run.sh --all                           <span class="cmt"># every catalog adapter</span></code></div>
+          </div>
+        </article>
+
+        <!-- Step 5 -->
+        <article class="step">
+          <div class="num">5</div>
+          <div class="step-body">
+            <h3>Deployment</h3>
+            <p>Once your selection is ready, deployment proceeds automatically — no further input needed:</p>
+            <table class="spec timing">
+              <thead><tr><th>Stage</th><th>Duration</th></tr></thead>
+              <tbody>
+                <tr><td>Check prerequisites</td><td>~2 s</td></tr>
+                <tr><td>Install Docker Engine (if needed)</td><td>1–3 min</td></tr>
+                <tr><td>Log in to registry &amp; configure host</td><td>~10 s</td></tr>
+                <tr><td>Pull Docker images (repo.protequ.com)</td><td>3–10 min</td></tr>
+                <tr><td>Deploy application &amp; open firewall</td><td>~30 s</td></tr>
+                <tr><td>Health check</td><td>~30 s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Step 6 -->
+        <article class="step">
+          <div class="num">6</div>
+          <div class="step-body">
+            <h3>Done!</h3>
+            <p>The installer prints the URL. Verify the stack and open the UI:</p>
+            <div class="cmd"><code>docker compose -f /opt/pq/compose/docker-compose.yml ps</code></div>
+            <div class="caption">
+              <p>Open <a href="https://localhost/" rel="noopener">https://&lt;host&gt;/</a> in a browser.</p>
+              <p>The browser may show a certificate warning — click <strong>Advanced</strong> → <strong>Proceed</strong> (self-signed cert). To remove the warning on operator devices, trust the CA from <code>https://&lt;host&gt;/ca.crt</code>.</p>
+              <div class="creds">
+                <div class="kv"><span class="lbl">Default login</span><code>admin</code> / <code>admin</code></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ─── TROUBLESHOOTING ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.7 6.3a4 4 0 0 1 5.7 5.7l-1 1 3.6 3.6a2 2 0 0 1-2.8 2.8L11.6 16l-1 1a4 4 0 0 1-5.7-5.7"/><path d="m9 9-4.5-4.5a2 2 0 0 1 2.8-2.8L11 5"/></svg>
+        Troubleshooting
+      </h2>
+      <p class="sub">Common issues and how to resolve them.</p>
+
+      <table class="spec trouble">
+        <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+        <tbody>
+          <tr><td>“System requirements not met”</td><td>Use Ubuntu 22.04 or 24.04 LTS on a 64-bit (amd64) host</td></tr>
+          <tr><td>Port already in use</td><td>Free the reported port, or set a different front-door port in Step 3</td></tr>
+          <tr><td>Docker daemon not running</td><td><code>sudo systemctl start docker</code>, then re-run the installer</td></tr>
+          <tr><td>Cannot reach the UI from another device</td><td>Open <code>443</code> + <code>8555</code> in the firewall (the installer does this when <code>ufw</code> is active)</td></tr>
+          <tr><td>Containers fail to start</td><td>Re-run the installer — it is idempotent and resumes</td></tr>
+          <tr><td>Certificate error in browser</td><td>Advanced → Proceed, or trust <code>https://&lt;host&gt;/ca.crt</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="meta-files">
+        <div class="row-line"><strong>Logs</strong><span>— streamed by the installer; container logs via</span><code>docker compose logs</code></div>
+        <div class="row-line"><strong>Config files</strong><span>—</span><code>/opt/pq/compose/</code></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© Protequ · Physical Integration Management System · PQ Platform v1.0.0</div>
+      <div class="links">
+        <a href="/adapters/">Adapters</a>
+        <a href="mailto:info@protequ.com">Contact</a>
+        <a href="https://www.protequ.com" target="_blank" rel="noopener">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── Auto-resize when embedded as iframe (postMessage) ────
+       Mirrors adapters/index.html: parent listens for
+       {type:'pq-iframe-resize', height}. No-op as a top-level document. -->
+  <script>
+    (function () {
+      if (window.self === window.top) return;
+      function postHeight() {
+        var h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        parent.postMessage({ type: 'pq-iframe-resize', height: h }, '*');
+      }
+      if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(postHeight).observe(document.body);
+      }
+      window.addEventListener('load', postHeight);
+      setTimeout(postHeight, 50);
+    })();
+  </script>
+</body>
+</html>
