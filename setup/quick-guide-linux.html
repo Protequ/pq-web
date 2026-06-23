@@ -375,8 +375,8 @@
 
       <h1>Get the PQ platform <span class="accent">running</span></h1>
       <p class="lead">
-        Run one command on your Ubuntu server. Docker Engine and every application image are
-        installed and pulled automatically — no manual configuration.
+        Copy the installer to your Ubuntu server and run it. Docker Engine and every application
+        image are installed and pulled automatically — no manual configuration.
       </p>
 
       <div class="hero-meta">
@@ -424,14 +424,15 @@
         <article class="step">
           <div class="num">1</div>
           <div class="step-body">
-            <h3>Run the install command</h3>
-            <p>On the server host, run the one-liner below. It downloads the installer and the compose bundle from <code>repo.protequ.com</code> and launches it as root.</p>
-            <div class="cmd"><code>curl -fsSL https://repo.protequ.com/api/packages/pq/generic/pq-installer/latest/run.sh | sudo bash</code></div>
+            <h3>Download &amp; run the installer</h3>
+            <p>Distribution is admin-mediated, like the Windows installer. Signed in to <code>repo.protequ.com</code>, download these three files from the <code>pq-installer</code> package and copy them to the server in one directory, then run as root:</p>
+            <div class="cmd multi"><code><span class="cmt"># in one directory: run.sh  pqinstall-linux-x86_64  compose-bundle.tar.gz</span>
+sudo ./run.sh</code></div>
             <div class="callout">
               <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
               <div class="body">
                 <p><strong>Run as root.</strong></p>
-                <p>The installer enables the Docker service, writes the compose stack to <code>/opt/pq</code>, and opens firewall ports — all of which require root. Piping to <code>sudo bash</code> handles this.</p>
+                <p>The installer enables the Docker service, writes the compose stack to <code>/opt/pq</code>, and opens firewall ports — all of which require root. <code>run.sh</code> uses the binary + bundle next to it (no public download).</p>
               </div>
             </div>
           </div>
@@ -468,8 +469,8 @@
             <h3>Server components &amp; adapters</h3>
             <p>The core services (PQ Server, go2rtc, Keycloak, NATS JetStream, PostgreSQL) are always deployed. Then choose the device integrations from the live catalog — a multiselect list you tick through.</p>
             <p>For unattended runs, select adapters on the command line instead:</p>
-            <div class="cmd multi"><code>sudo bash run.sh --adapters hikvision,hid-aero   <span class="cmt"># specific adapters</span>
-sudo bash run.sh --all                           <span class="cmt"># every catalog adapter</span></code></div>
+            <div class="cmd multi"><code>sudo ./run.sh -- --adapters hikvision,hid-aero   <span class="cmt"># specific adapters</span>
+sudo ./run.sh -- --all                           <span class="cmt"># every catalog adapter</span></code></div>
           </div>
         </article>
 
