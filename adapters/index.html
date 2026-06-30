@@ -320,6 +320,19 @@
       padding: 3px 8px;
       border-radius: 999px;
     }
+    .badge-prerelease {
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
 
     .card-desc {
       font-size: 13.5px;
@@ -462,6 +475,7 @@
       { id: 'pqmonitor', category: 'module', name: 'Monitoring & Visualization', vendor: 'Protequ', description: 'Centralized monitoring and visualization dashboard for PQ', capabilities: [] },
       { id: 'pqparadox', category: 'intrusion', name: 'Paradox EVO', vendor: 'Paradox Security', description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.', capabilities: ['timeSync', 'partitions', 'outputs'] },
       { id: 'pqsuprema', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema', description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.', capabilities: ['timeSync', 'biometric', 'access'] },
+      { id: 'pqtechfass', category: 'access', name: 'TECH FASS APS mini Plus', vendor: 'TECH FASS s.r.o.', prerelease: true, description: 'APS mini Plus controllers over an RS485-to-TCP gateway — card and PIN readers, logical doors, relay outputs and archived access events.', capabilities: ['access', 'outputs'] },
     ];
 
     // Presentation metadata per registry category. Categories present in the
@@ -529,6 +543,7 @@
               <span class="vendor">${escapeHtml(a.vendor)}</span>
               <h3>${escapeHtml(a.name)}</h3>
             </div>
+            ${a.prerelease ? '<span class="badge-prerelease">Pre-release</span>' : ''}
             ${a.demo ? '<span class="badge-demo">Demo</span>' : ''}
           </div>
           <p class="card-desc">${escapeHtml(a.description)}</p>
@@ -548,6 +563,7 @@
         a.name, a.vendor, a.description,
         ...(a.capabilities || []).map(c => (capLabels[c]?.label || c)),
         a.demo ? 'demo simulator' : '',
+        a.prerelease ? 'prerelease pre-release beta rc' : '',
         a.category,
       ].join(' ').toLowerCase();
       // Multi-word AND search
@@ -603,11 +619,12 @@
     function renderHeroMeta() {
       const total = adapters.length;
       const demo = adapters.filter(a => a.demo).length;
+      const pre  = adapters.filter(a => a.prerelease).length;
       document.getElementById('meta-total').textContent = total;
-      const split = demo
-        ? `${total - demo} production · ${demo} demo`
-        : `${total} production`;
-      document.getElementById('meta-split').textContent = split;
+      const parts = [`${total - demo - pre} production`];
+      if (demo) parts.push(`${demo} demo`);
+      if (pre)  parts.push(`${pre} pre-release`);
+      document.getElementById('meta-split').textContent = parts.join(' · ');
     }
 
     // Filter bar — one button per category present in the catalog.
