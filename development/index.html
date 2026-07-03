@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protequ — Enable Local Adapter Development</title>
+  <meta name="description" content="Protequ Physical Integration Management System — how to open NATS and the Internal API for a host-run adapter during local development." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0:        #1a1b22;
+      --bg-1:        rgb(35, 36, 44);
+      --bg-2:        rgb(50, 51, 61);
+      --line:        rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text:        #f1f3f6;
+      --text-dim:    #a3a8b3;
+      --text-faint:  #6c7180;
+      --accent:      #00b0f0;            /* PQ glow */
+      --accent-dim:  rgba(0, 176, 240, 0.18);
+      --accent-soft: rgba(0, 176, 240, 0.08);
+      --brand-pink:  #FFAAAA;            /* logo lock */
+      --ok:          #4caf50;
+      --warn:        #F9A825;
+      --warn-soft:   rgba(249, 168, 37, 0.10);
+      --warn-dim:    rgba(249, 168, 37, 0.32);
+      --info:        #1565C0;
+      --font-sans:   'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono:   ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-0);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-feature-settings: 'cv11', 'ss01';
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      line-height: 1.6;
+    }
+
+    body {
+      background:
+        radial-gradient(1100px 540px at 20% -10%, rgba(0,176,240,0.10), transparent 60%),
+        radial-gradient(900px 480px at 95% 0%, rgba(255,170,170,0.07), transparent 65%),
+        var(--bg-0);
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code, kbd {
+      font-family: var(--font-mono);
+      font-size: 0.86em;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 1px 6px;
+      color: var(--text);
+      word-break: break-word;
+    }
+    kbd {
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+      font-weight: 600;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero { padding: 80px 0 40px; position: relative; }
+    .brand-row { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+    .brand-mark {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, #fff 65%, transparent 66%);
+      box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.5);
+      animation: pq-glow 2s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    @keyframes pq-glow {
+      0%, 100% { box-shadow: 0 0 12px 4px rgba(0, 176, 240, 0.45); }
+      50%      { box-shadow: 0 0 22px 10px rgba(0, 176, 240, 0.8); }
+    }
+    .brand-mark svg { width: 100%; height: 100%; display: block; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text .name { font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+    .brand-text .sub  { font-weight: 500; font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+      padding: 6px 12px; border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    .eyebrow svg { width: 13px; height: 13px; }
+
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 60px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin: 0 0 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #c8cdd6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 .accent { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+
+    .hero p.lead {
+      font-size: clamp(16px, 1.5vw, 19px);
+      color: var(--text-dim);
+      max-width: 680px;
+      margin: 0 0 28px;
+    }
+
+    .hero-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 8px 28px; align-items: center;
+      font-size: 13px; color: var(--text-faint);
+    }
+    .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); display: inline-block; margin-right: 8px; box-shadow: 0 0 8px var(--ok); }
+
+    /* ─── PREREQ TABLE / SPEC ────────────────────────────────── */
+    .section { margin: 56px 0; }
+    .section > h2 {
+      margin: 0 0 8px;
+      font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section > h2 svg { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; }
+    .section > .sub { color: var(--text-faint); font-size: 13.5px; margin: 0 0 24px; padding-left: 34px; }
+
+    table.spec {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 14px;
+      background: linear-gradient(180deg, var(--bg-1) 0%, rgba(35,36,44,0.6) 100%);
+    }
+    table.spec th {
+      text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 13px 18px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--line);
+    }
+    table.spec td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+    table.spec tr:last-child td { border-bottom: 0; }
+    table.spec td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; width: 1%; }
+    table.spec td.sub-row { color: var(--text-dim); font-weight: 400; }
+    table.spec .hl { color: var(--accent); font-weight: 700; }
+
+    .note {
+      margin-top: 14px;
+      font-size: 13px; color: var(--text-faint);
+      padding-left: 4px;
+    }
+
+    /* ─── CALLOUT ────────────────────────────────────────────── */
+    .callout {
+      display: flex; gap: 14px;
+      margin: 22px 0;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--warn-dim);
+      background: var(--warn-soft);
+    }
+    .callout .ico {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(249,168,37,0.16);
+      color: var(--warn);
+    }
+    .callout .ico svg { width: 17px; height: 17px; }
+    .callout .body { font-size: 14px; color: var(--text); }
+    .callout .body strong { color: var(--warn); }
+    .callout .body p { margin: 0 0 8px; }
+    .callout .body p:last-child { margin-bottom: 0; }
+    .callout .body .crumbs { color: var(--text); }
+
+    /* ─── STEPS ──────────────────────────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 20px;
+      padding: 24px;
+      background: linear-gradient(180deg, var(--bg-1) 0%, rgba(35,36,44,0.6) 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .step::before {
+      content: "";
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: radial-gradient(420px 200px at 100% 0%, rgba(0,176,240,0.07), transparent 65%);
+    }
+    .step:hover { border-color: var(--line-strong); box-shadow: 0 10px 30px -14px rgba(0,0,0,0.6); }
+    .step .num {
+      grid-row: 1 / span 2;
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-dim);
+    }
+    .step .step-body { min-width: 0; }
+    .step h3 {
+      margin: 4px 0 10px;
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .step p { margin: 0 0 12px; color: var(--text-dim); font-size: 14.5px; }
+    .step p:last-child { margin-bottom: 0; }
+    .step strong { color: var(--text); font-weight: 600; }
+
+    /* credentials block */
+    .creds {
+      margin-top: 12px;
+      display: grid; gap: 6px;
+      font-size: 13px;
+    }
+    .creds .kv { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .creds .kv .lbl { color: var(--text-faint); min-width: 130px; }
+
+    /* duration list */
+    table.spec.timing td:last-child { color: var(--accent); font-weight: 600; white-space: nowrap; }
+    table.spec.timing td:first-child { color: var(--text-dim); font-weight: 500; white-space: normal; width: auto; }
+
+    /* troubleshooting */
+    table.spec.trouble td:first-child { color: var(--text); font-weight: 600; white-space: normal; width: 42%; }
+
+    .meta-files {
+      margin-top: 18px;
+      display: grid; gap: 8px;
+      font-size: 13px; color: var(--text-dim);
+    }
+    .meta-files .row-line { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .meta-files .row-line strong { color: var(--text); font-weight: 600; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      margin-top: 96px;
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--line);
+      color: var(--text-faint);
+      font-size: 13px;
+    }
+    footer .container {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    footer .links { display: flex; gap: 20px; }
+    footer .links a { color: var(--text-dim); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero { padding: 56px 0 28px; }
+      .step { grid-template-columns: 1fr; gap: 14px; }
+      .step .num { grid-row: auto; width: 44px; height: 44px; font-size: 18px; border-radius: 12px; }
+      .section > .sub { padding-left: 0; }
+      table.spec td:first-child { white-space: normal; }
+    }
+
+    /* ─── COMMAND BLOCK (Linux CLI guide) ────────────────────── */
+    .cmd {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin: 14px 0 4px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: var(--bg-0);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .cmd::before {
+      content: "$";
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .cmd code {
+      background: none; border: 0; padding: 0;
+      color: var(--text); white-space: pre;
+      font-size: inherit;
+    }
+    .cmd .cmt { color: var(--text-faint); }
+    .cmd.multi { display: block; }
+    .cmd.multi::before { content: none; }
+    .cmd.multi code { display: block; white-space: pre; }
+  </style>
+</head>
+<body>
+  <main class="container">
+
+    <!-- ─── HERO ─── -->
+    <section class="hero">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">
+          <!-- Real PQ logo from src/Pq.Client.App/wwwroot/img/pq.logo.svg -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0,1024) scale(0.1,-0.1)" fill="#000" stroke="none">
+              <path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0 -5120z m7320 1715 c259 -32 531 -95 848 -197 l193 -62 -4 -721 c-3 -624 -6 -733 -21 -815 -52 -290 -136 -491 -306 -733 -77 -110 -351 -388 -490 -498 -108 -86 -259 -193 -264 -188 -71 84 -207 251 -204 253 43 25 260 199 339 273 296 275 447 485 534 746 66 198 67 212 72 848 l4 576 -178 51 c-345 100 -656 150 -878 139 -120 -6 -330 -42 -414 -72 -24 -8 -47 -15 -51 -15 -4 0 -52 37 -106 81 -55 45 -116 93 -136 108 -21 14 -38 29 -38 33 0 14 146 93 230 124 88 34 246 68 385 84 103 11 326 5 485 -15z m-1745 -145 c297 -28 532 -127 743 -313 372 -327 538 -866 442 -1432 -30 -177 -108 -388 -191 -517 -19 -29 -28 -52 -23 -60 5 -7 139 -194 300 -414 160 -221 294 -406 297 -411 4 -6 -26 -27 -66 -48 l-73 -38 -134 73 c-277 150 -429 258 -577 407 l-102 104 -88 -53 c-147 -89 -310 -145 -491 -169 -110 -15 -352 -7 -450 15 -230 50 -482 184 -619 327 -124 131 -260 354 -321 529 -147 421 -117 912 80 1304 59 117 104 186 181 274 270 310 664 462 1092 422z m-2450 -30 c298 -34 535 -168 685 -385 48 -70 108 -202 131 -290 47 -180 34 -431 -32 -623 -91 -270 -314 -468 -618 -550 -94 -25 -105 -26 -478 -30 l-383 -4 0 -464 0 -464 -273 0 c-199 0 -276 3 -285 12 -9 9 -12 335 -12 1403 0 766 3 1395 7 1398 11 11 1159 8 1258 -3z"/>
+              <path d="M5281 6155 c-143 -33 -289 -133 -386 -265 -207 -282 -255 -785 -106 -1114 63 -140 207 -300 328 -364 182 -96 457 -97 648 -2 33 17 68 37 79 44 18 14 17 16 -5 48 -13 18 -114 160 -226 315 -112 155 -203 285 -203 288 0 3 130 5 289 5 l289 0 83 -120 c46 -66 86 -120 89 -120 12 0 51 175 62 280 22 206 -15 420 -101 595 -104 209 -262 345 -466 401 -84 22 -292 27 -374 9z"/>
+              <path d="M2430 5719 l0 -424 322 6 c336 7 371 11 464 55 124 58 193 208 181 394 -7 122 -35 191 -106 261 -103 101 -180 118 -578 126 l-283 6 0 -424z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="name">Protequ</span>
+          <span class="sub">Physical Integration Management System</span>
+        </div>
+      </div>
+
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+        Developer guide
+      </span>
+
+      <h1>Enable <span class="accent">local development</span></h1>
+      <p class="lead">
+        PQ keeps its internal services — the NATS message bus and the <code>/Internal/*</code> API —
+        behind the Docker Compose perimeter. When you run an adapter on your own machine (Visual Studio
+        or Rider) instead of inside Compose, that perimeter has to be opened up for it. This guide
+        walks through doing that, safely and reversibly, for both a repo checkout and a bare installed box.
+      </p>
+
+      <div class="hero-meta">
+        <span><span class="dot"></span>Two paths · repo checkout or installed box</span>
+        <span>Reversible — turn it back off when you're done</span>
+      </div>
+    </section>
+
+    <!-- ─── WHAT & WHY ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        What development mode is
+      </h2>
+      <p class="sub">The trust boundary you're temporarily moving.</p>
+
+      <p style="color: var(--text-dim); font-size: 14.5px;">
+        Per <strong>ADR-0007</strong>, adapters running inside the Docker Compose perimeter are treated as
+        part of the trusted computing base: network isolation — not per-adapter authentication — is what
+        keeps NATS and the <code>/Internal/*</code> API safe. A host-run adapter sits <em>outside</em> that
+        perimeter, so development mode deliberately punches two holes in it: it publishes NATS on a
+        reachable port, and (if needed) lets your host call <code>/Internal/*</code>. Both are meant to be
+        temporary and are easy to reverse — see <strong>Turn it off</strong> below.
+      </p>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Never enable this in production.</strong></p>
+          <p>The <code>nats-dev</code> proxy publishes NATS on <code>0.0.0.0</code> — reachable from anywhere on the LAN — using the shared <code>pq-master</code> / <code>pq-master</code> credentials. <code>InternalApi__AllowExternal</code>, if you ever need it, bypasses the IP-based protection in front of <code>/Internal/*</code>. Only do this on a development box you control.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PREREQUISITES ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Prerequisites
+      </h2>
+      <p class="sub">Have these ready before you start either path below.</p>
+
+      <table class="spec">
+        <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Docker</td><td>Docker running on the machine hosting the PQ stack</td></tr>
+          <tr><td>PQ stack</td><td>A running PQ deployment — repo checkout via Compose, or an installed box</td></tr>
+          <tr><td>Adapter project</td><td>Open in Visual Studio or Rider, ready to run on your host machine</td></tr>
+          <tr><td>.NET SDK</td><td>.NET 10 SDK installed locally</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── NUGET FEED ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>
+        PQ NuGet feed
+      </h2>
+      <p class="sub">Your adapter project references <code>Pq.Adapters.Framework</code> from the Protequ package registry.</p>
+
+      <p style="color: var(--text-dim); font-size: 14.5px;">
+        The framework package is published to a private NuGet feed on <code>repo.protequ.com</code>.
+        The feed requires authentication even for reads. You'll receive a personal account
+        (username + token) from Protequ — add the feed once with those credentials:
+      </p>
+
+      <div class="cmd multi"><code>dotnet nuget add source https://repo.protequ.com/api/packages/PQ/nuget/index.json \
+  -n pq -u &lt;your-username&gt; -p &lt;your-token&gt; \
+  --store-password-in-clear-text</code></div>
+      <p class="note">
+        Replace <code>&lt;your-username&gt;</code> / <code>&lt;your-token&gt;</code> with the credentials you
+        received from Protequ. On Windows you can drop <code>--store-password-in-clear-text</code> — the
+        password is then stored DPAPI-encrypted in your user-level <code>NuGet.Config</code>. On Linux/macOS
+        the flag is required. The account is read-only; publishing goes through CI.
+      </p>
+    </section>
+
+    <!-- ─── BRANCH A ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+        Branch A — I have the repo
+      </h2>
+      <p class="sub">You have a checkout with <code>.install/compose</code> and can bring the stack up yourself.</p>
+
+      <div class="steps">
+
+        <!-- A.1 -->
+        <article class="step">
+          <div class="num">1</div>
+          <div class="step-body">
+            <h3>Start PQ with the dev profile</h3>
+            <p>From the compose folder, bring the stack up with the <code>dev</code> profile and allow external Internal API access:</p>
+            <div class="cmd multi"><code>cd .install/compose
+INTERNAL_API_ALLOW_EXTERNAL=true docker compose --profile dev up -d</code></div>
+            <p>This starts the <code>nats-dev</code> socat sidecar, which publishes NATS on <code>localhost:4222</code>, and sets <code>InternalApi__AllowExternal=true</code> so your host can call <code>/Internal/*</code>.</p>
+          </div>
+        </article>
+
+        <!-- A.2 -->
+        <article class="step">
+          <div class="num">2</div>
+          <div class="step-body">
+            <h3>Configure your adapter</h3>
+            <p>Run the helper script from the repo root:</p>
+            <div class="cmd"><code>.\setup-adapter-dev-config.ps1</code></div>
+            <p>It writes <code>~/.pq/adapter-dev.json</code> with the NATS connection (<code>localhost:4222</code>, <code>pq-master</code> / <code>pq-master</code>), read as a fallback by <code>AdapterFramework.ApplyMqFallbackConfiguration</code> for any locally-run adapter without its own complete <code>Mq</code> config, and sets <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> so adapter logs flow to Grafana.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ─── BRANCH B ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Branch B — I only have an installed box
+      </h2>
+      <p class="sub">No repo checkout — just a running PQ install reachable at its front door.</p>
+
+      <div class="steps">
+
+        <!-- B.1 -->
+        <article class="step">
+          <div class="num">1</div>
+          <div class="step-body">
+            <h3>Publish NATS</h3>
+            <p>Run a standalone socat sidecar on the Docker host to publish NATS on <code>4222</code>:</p>
+            <div class="cmd multi"><code>docker run -d --name nats-dev --network pq_default -p 4222:4222 alpine/socat:latest TCP-LISTEN:4222,fork,reuseaddr TCP:nats:4222</code></div>
+            <div class="callout">
+              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+              <div class="body">
+                <p><strong>This does not survive a redeploy.</strong></p>
+                <p>A standalone <code>docker run</code> container isn't part of the compose stack, so <code>docker compose down</code> — or any redeploy — doesn't restart it. Re-run the command above afterwards. It publishes NATS on <code>0.0.0.0</code> (LAN-reachable) with the shared <code>pq-master</code> / <code>pq-master</code> credentials.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- B.2 -->
+        <article class="step">
+          <div class="num">2</div>
+          <div class="step-body">
+            <h3>Internal API</h3>
+            <p>Normally, <strong>nothing to do here</strong>. Your host-run adapter reaches <code>/Internal/*</code> through the nginx front door at <code>https://localhost:5443</code>, using the base URL and <code>X-Api-Key</code> it receives automatically at registration. The adapter's HTTP client bypasses TLS validation for this, so there's no CA setup either. On a standard installed box, <code>/Internal/*</code> is not IP-blocked from the host.</p>
+            <p>Only if you hit an HTTP 403 on <code>/Internal/*</code> (see <strong>Troubleshooting</strong> below) does an admin need to set <code>InternalApi__AllowExternal=true</code> on the <code>server</code> service and restart it.</p>
+          </div>
+        </article>
+
+        <!-- B.3 -->
+        <article class="step">
+          <div class="num">3</div>
+          <div class="step-body">
+            <h3>Configure your adapter</h3>
+            <p>There's no repo checkout to run the setup script from, so hand-write <code>~/.pq/adapter-dev.json</code>:</p>
+            <div class="cmd multi"><code>{
+  "Mq": { "Host": "localhost:4222", "User": "pq-master", "Password": "pq-master" }
+}</code></div>
+            <p>Then set <code>OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317</code> as a persistent user environment variable, so adapter logs flow to Grafana.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ─── RUN & VERIFY ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Run &amp; verify
+      </h2>
+      <p class="sub">Start your adapter from Visual Studio / Rider and confirm it's actually talking to PQ.</p>
+
+      <div class="steps">
+
+        <article class="step">
+          <div class="num">1</div>
+          <div class="step-body">
+            <h3>Adapter connects to NATS</h3>
+            <p>Your adapter connects to <code>localhost:4222</code>. A plain TCP connect to that port should return a NATS <code>INFO {…}</code> banner — a quick sanity check that the sidecar is up before you even start the adapter.</p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">2</div>
+          <div class="step-body">
+            <h3>Adapter registers with the server</h3>
+            <p>Look for <code>AdapterConfigurationResponse</code> in your adapter's logs — that confirms registration succeeded and it received its API base URL and key back from the server.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ─── OBSERVABILITY ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        Observability
+      </h2>
+      <p class="sub">Your host-run adapter's logs and traces show up alongside everything else.</p>
+
+      <p style="color: var(--text-dim); font-size: 14.5px;">
+        Set <code>OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317</code> so your adapter exports to the
+        Alloy collector, which is always running — no compose profile needed to turn it on. From there, logs
+        appear in Grafana at <a href="https://localhost:5443/grafana/d/pq-home" rel="noopener">https://localhost:5443/grafana/d/pq-home</a>,
+        behind the front door — not on <code>localhost:3000</code>.
+      </p>
+    </section>
+
+    <!-- ─── TURN IT OFF ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
+        Turn it off
+      </h2>
+      <p class="sub">Close both holes once you're done developing.</p>
+
+      <p style="color: var(--text-dim); font-size: 14.5px; margin-bottom: 6px;"><strong style="color: var(--text);">Branch A</strong> — stop the dev profile:</p>
+      <div class="cmd"><code>docker compose --profile dev down</code></div>
+
+      <p style="color: var(--text-dim); font-size: 14.5px; margin: 18px 0 6px;"><strong style="color: var(--text);">Branch B</strong> — remove the standalone sidecar:</p>
+      <div class="cmd"><code>docker rm -f nats-dev</code></div>
+      <p class="note">If you set <code>InternalApi__AllowExternal=true</code> as a troubleshooting fallback, unset it on the <code>server</code> service and restart the container.</p>
+    </section>
+
+    <!-- ─── TROUBLESHOOTING ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.7 6.3a4 4 0 0 1 5.7 5.7l-1 1 3.6 3.6a2 2 0 0 1-2.8 2.8L11.6 16l-1 1a4 4 0 0 1-5.7-5.7"/><path d="m9 9-4.5-4.5a2 2 0 0 1 2.8-2.8L11 5"/></svg>
+        Troubleshooting
+      </h2>
+      <p class="sub">Common issues and how to resolve them.</p>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Connection refused to localhost:4222</strong></p>
+          <p>The <code>nats-dev</code> sidecar isn't running. Branch A: confirm you started with <code>--profile dev</code> (<code>docker compose ps</code> should show <code>nats-dev</code>). Branch B: re-run the <code>docker run --name nats-dev …</code> command — remember it doesn't survive a redeploy.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>403 Forbidden on /Internal/*</strong></p>
+          <p>Set <code>InternalApi__AllowExternal=true</code> on the <code>server</code> service and restart it. On a repo checkout, this is the same environment variable you can pass to <code>docker compose --profile dev up -d</code>.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Adapter not receiving commands</strong></p>
+          <p>Check the NATS connection in your adapter's logs, confirm it registered successfully (look for <code>AdapterConfigurationResponse</code>), and confirm the device is started in the PQ UI.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© Protequ · Physical Integration Management System</div>
+      <div class="links">
+        <a href="/adapters/">Adapters</a>
+        <a href="mailto:info@protequ.com">Contact</a>
+        <a href="https://www.protequ.com" target="_blank" rel="noopener">Website</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
