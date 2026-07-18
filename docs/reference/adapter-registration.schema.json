@@ -1,0 +1,631 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pq.io/schemas/adapter-registration.schema.json",
+  "title": "PQ Adapter Registration",
+  "description": "Schema for adapter-registration.yaml configuration files",
+  "type": "object",
+  "required": ["adapter_id", "name", "version", "adapter_type", "security_domains", "device_types"],
+  "additionalProperties": false,
+  "properties": {
+    "adapter_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique adapter identifier (UUID format)"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable adapter name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Semantic version of the adapter"
+    },
+    "adapter_type": {
+      "type": "string",
+      "enum": ["security"],
+      "description": "Type of adapter"
+    },
+    "manufacturer": {
+      "type": "string",
+      "description": "Vendor/manufacturer name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed adapter description"
+    },
+    "security_domains": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["access", "intrusion", "fire", "video", "hvac", "lighting", "energy", "safety", "utilities"]
+      },
+      "minItems": 1,
+      "description": "Security domains covered by this adapter"
+    },
+    "capabilities": {
+      "$ref": "#/$defs/capabilities"
+    },
+    "transport": {
+      "$ref": "#/$defs/transport",
+      "description": "Transport configuration used by current adapters"
+    },
+    "protocol": {
+      "$ref": "#/$defs/protocol",
+      "description": "Single protocol configuration (mutually exclusive with protocols)"
+    },
+    "protocols": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/protocol"
+      },
+      "description": "Multiple named protocol configurations (mutually exclusive with protocol)"
+    },
+    "bootstrap_config": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/$defs/property"
+        }
+      },
+      "description": "Minimum configuration required for adapter startup"
+    },
+    "device_types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/device_type"
+      },
+      "minItems": 1,
+      "description": "Array of supported device type definitions"
+    },
+    "custom_functions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/function"
+      },
+      "description": "Custom function definitions"
+    },
+    "custom_enums": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": "string" },
+          "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        },
+        "required": ["values"]
+      },
+      "description": "Custom enum type definitions (name -> { description, values })"
+    },
+    "connection_tracking": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enables automatic connection state tracking. Set to false to disable automatic tracking when adapter manages connection state manually."
+    }
+  },
+  "$defs": {
+    "capabilities": {
+      "type": "object",
+      "required": ["auto_discovery"],
+      "additionalProperties": false,
+      "properties": {
+        "auto_discovery": {
+          "type": "boolean",
+          "description": "Whether the adapter supports device discovery"
+        },
+        "hot_plug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Supports runtime device addition/removal"
+        },
+        "firmware_update": {
+          "type": "boolean",
+          "default": false,
+          "description": "Can update device firmware"
+        },
+        "offline_mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Functions without PQ system connection"
+        },
+        "config_backup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Can backup/restore device configuration"
+        },
+        "time_sync": {
+          "type": "boolean",
+          "default": false,
+          "description": "Can synchronize time with devices (generates ITimeSynchronized interface)"
+        }
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["None", "Queue", "Events"],
+          "description": "Protocol type (case-sensitive PascalCase)"
+        },
+        "address_type": {
+          "type": "string",
+          "default": "string",
+          "description": "Address type for EventProtocolBase (e.g., 'uint', 'string')"
+        },
+        "event_type": {
+          "type": "string",
+          "default": "DeviceEventBase",
+          "description": "Fully qualified device event type for EventProtocolBase"
+        }
+      }
+    },
+    "transport": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["tcp", "custom"],
+          "description": "Transport family"
+        },
+        "protocol": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["None", "Queue", "Events"]
+            },
+            "address_type": {
+              "type": "string"
+            },
+            "event_type": {
+              "type": "string"
+            },
+            "frame_type": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "device_type": {
+      "type": "object",
+      "required": ["type_id"],
+      "additionalProperties": false,
+      "properties": {
+        "type_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-]+$",
+          "description": "Unique device type identifier within adapter"
+        },
+        "abstract": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, this device type cannot be instantiated directly. Used as a base for other device types via 'extends'."
+        },
+        "extends": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-]+$",
+          "description": "The type_id of the base device type this type extends. Inherits properties, functions, commands, and events from the base type."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable device type name. Required for concrete (non-abstract) device types."
+        },
+        "description": {
+          "type": "string",
+          "description": "Device type description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["door", "reader", "panel", "module", "input", "output", "partition", "keypad", "detector", "nvr", "channel", "camera"],
+          "description": "Device category for UI icons. Required for concrete types without 'extends', inherited from base when 'extends' is set."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/property"
+          },
+          "description": "Device-level properties"
+        },
+        "functions": {
+          "type": ["object", "null"],
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    { "$ref": "#/$defs/property_override" },
+                    { "type": "string" },
+                    { "type": "number" },
+                    { "type": "integer" },
+                    { "type": "boolean" },
+                    { "type": "array" },
+                    { "type": "null" }
+                  ]
+                },
+                "description": "Property overrides (keyed by property name)"
+              }
+            ]
+          },
+          "description": "Functions assigned to device type. Values can be null (use defaults) or property overrides."
+        },
+        "parents": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/parent_relationship"
+          },
+          "description": "Parent device relationships (keyed by parent type_id)"
+        },
+        "commands": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string",
+            "pattern": "^pq\\.command\\."
+          },
+          "description": "List of supported command identifiers (e.g., pq.command.access.open)"
+        },
+        "addressing": {
+          "$ref": "#/$defs/addressing"
+        },
+        "access_point": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indicates device is an access point"
+        },
+        "identity": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Property names that form the stable device discovery identity key"
+            },
+            {
+              "const": "type",
+              "description": "Use the device type as the identity for a singleton child"
+            }
+          ]
+        },
+        "apb_point": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indicates device participates in antipassback zone resolution (typically readers)"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^pq\\.event\\."
+          },
+          "description": "Events used by this device type (generates PqEvent entries)"
+        },
+        "unique": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "List of property names whose combination must be unique among siblings (e.g., [bus, address])"
+            },
+            {
+              "const": false,
+              "description": "Explicitly disable address uniqueness validation"
+            }
+          ],
+          "description": "Uniqueness constraint for sibling Things of this type. When omitted and an 'address' property exists, address is implicitly unique. Set to false to opt out."
+        },
+        "address_space": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Shared address space name. Device types with the same address_space under the same parent cannot share the same address. When omitted, uniqueness is validated per-type only."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["abstract"],
+            "properties": {
+              "abstract": { "const": true }
+            }
+          },
+          "then": {
+            "required": ["category"],
+            "description": "Abstract types require category but name is optional"
+          }
+        },
+        {
+          "if": {
+            "not": {
+              "anyOf": [
+                { "required": ["abstract"], "properties": { "abstract": { "const": true } } },
+                { "required": ["extends"] }
+              ]
+            }
+          },
+          "then": {
+            "required": ["name", "category"],
+            "description": "Concrete types without extends require name and category"
+          }
+        },
+        {
+          "if": {
+            "required": ["extends"],
+            "properties": {
+              "abstract": { "not": { "const": true } }
+            }
+          },
+          "then": {
+            "required": ["name"],
+            "description": "Derived concrete types require name (category inherited from base)"
+          }
+        }
+      ]
+    },
+    "parent_relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_siblings": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum devices of this type per parent"
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Parent is mandatory"
+        }
+      }
+    },
+    "addressing": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["numeric", "string", "composite"],
+          "description": "Addressing type"
+        },
+        "range": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Valid range for numeric addressing [min, max]"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern for string addressing"
+        }
+      }
+    },
+    "property": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["int", "uint", "long", "ulong", "short", "ushort", "byte", "sbyte", "string", "host", "ipv4", "bool", "enum", "float", "double", "decimal", "currency", "guid", "datetime", "datetimeoffset", "timespan", "bytes"]
+            },
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z][a-zA-Z0-9]*\\[\\]$",
+              "description": "Array type. For device type references (e.g., Partition[]), creates many-to-many relationship with IReadOnlyList<T> property. For primitive types (e.g., int[], guid[]), creates array property."
+            },
+            {
+              "type": "string",
+              "pattern": "^[A-Z][a-zA-Z0-9]*$",
+              "description": "Device type reference (single) or custom enum. If matches a type_id in device_types, creates a nullable reference property resolved at tree construction. Otherwise treated as custom enum type."
+            }
+          ],
+          "description": "Property data type. Can be primitive, enum, device type reference (single or array), or primitive array."
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Property is mandatory"
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "en": {
+                  "type": "string",
+                  "description": "English description"
+                },
+                "cs": {
+                  "type": "string",
+                  "description": "Czech description"
+                }
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "Property description (string or multi-language dictionary)"
+        },
+        "range": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Valid range [min, max] for numeric types"
+        },
+        "max_length": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum string length"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex validation pattern for strings"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of valid enum values (required when type is 'enum')"
+        },
+        "sensitive": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indicates sensitive data (passwords, keys) - UI will mask display"
+        },
+        "category": {
+          "type": "string",
+          "description": "Property category for UI grouping (overrides function-level category)"
+        },
+        "private": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, property is not exposed to UI (internal to adapter)"
+        },
+        "protocol_type": {
+          "type": "string",
+          "description": "Underlying protocol/wire type when it differs from the UI type (e.g. an address shown as a string but addressed on the wire as int)"
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO currency code when type is 'currency' (e.g. USD)"
+        },
+        "precision": {
+          "type": "integer",
+          "description": "Decimal precision for currency/decimal types"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "enum"
+              }
+            }
+          },
+          "then": {
+            "required": ["values"]
+          }
+        }
+      ]
+    },
+    "function": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Function description"
+        },
+        "state_enum": {
+          "type": "string",
+          "description": "Name of a custom enum that types this function's state"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]+(?:\\.[a-z]+)*$"
+          },
+          "description": "State identifiers (dot-separated, e.g., 'access.unlocked')"
+        },
+        "properties": {
+          "type": ["object", "null"],
+          "additionalProperties": {
+            "$ref": "#/$defs/property"
+          },
+          "description": "Function-specific properties"
+        },
+        "actions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/action"
+          },
+          "description": "Custom actions"
+        },
+        "extended_construction": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, omits primary constructor (user provides in partial class)"
+        },
+        "category": {
+          "type": "string",
+          "description": "Optional category name for properties (lowercase in output)"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Action description"
+        },
+        "target_state": {
+          "type": "string",
+          "description": "Target state after action"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Events emitted by action"
+        },
+        "custom": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, implementation is in custom partial class"
+        }
+      }
+    },
+    "property_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Override configuration for a function property",
+      "properties": {
+        "private": {
+          "type": "boolean",
+          "description": "When true, hides this property from UI (adapter-level override)"
+        },
+        "default": {
+          "description": "Override default value for this property"
+        }
+      }
+    }
+  }
+}

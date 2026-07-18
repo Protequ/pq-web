@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pq.io/schemas/access-model.schema.json",
+  "title": "PQ Access Model",
+  "description": "Schema for access-model.yaml configuration files",
+  "type": "object",
+  "required": ["model"],
+  "additionalProperties": false,
+  "properties": {
+    "model": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/model_entity"
+      },
+      "description": "Access model entity definitions for authorization sync"
+    },
+    "person_profiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/person_profile"
+      },
+      "description": "Adapter-specific person profile fields per access slot type"
+    }
+  },
+  "$defs": {
+    "person_profile": {
+      "type": "object",
+      "required": ["slot_type", "fields"],
+      "additionalProperties": false,
+      "properties": {
+        "slot_type": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9]*$",
+          "description": "Access model slot/entity type the profile applies to"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/person_profile_field"
+          },
+          "description": "Profile field definitions"
+        }
+      }
+    },
+    "person_profile_field": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "type": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": true,
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Valid enum values (when type is 'enum')"
+        },
+        "range": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "sensitive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "model_entity": {
+      "type": "object",
+      "required": ["type_id"],
+      "additionalProperties": false,
+      "properties": {
+        "type_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9]*$",
+          "description": "Entity type identifier (e.g., 'User', 'AccessLevel')"
+        },
+        "id": {
+          "type": "string",
+          "description": "Natural-key property name when the entity's address is a data field (e.g. card_number) instead of a framework-allocated address"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Entity properties as key-value pairs (property name -> type string). Supported types: int, uint, long, ulong, short, ushort, byte, sbyte, string, bool, float, double, decimal, guid, datetime, datetimeoffset, timespan, bytes, EntityTypeId, EntityTypeId[]"
+        },
+        "range": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Valid address range [min, max] for uint address entities"
+        },
+        "updatable": {
+          "type": "string",
+          "enum": ["inplace", "replace"],
+          "default": "inplace",
+          "description": "Update strategy for tracked entities: inplace (UpdateCommands) or replace (Delete+Create)"
+        },
+        "match_by_credential_id": {
+          "type": "boolean",
+          "default": false,
+          "description": "Uses ResolvedCredentialId as the stable device-slot identity for this entity"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "properties": {
+                "type": "object",
+                "required": ["address"],
+                "properties": {
+                  "address": {
+                    "const": "uint"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "required": ["range"]
+          }
+        },
+        {
+          "if": {
+            "required": ["range"]
+          },
+          "then": {
+            "properties": {
+              "properties": {
+                "type": "object",
+                "required": ["address"],
+                "properties": {
+                  "address": {
+                    "const": "uint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "properties": {
+                "type": "object",
+                "required": ["address"],
+                "properties": {
+                  "address": {
+                    "enum": ["int", "short", "ushort", "byte", "sbyte", "long", "ulong"]
+                  }
+                }
+              }
+            }
+          },
+          "then": false
+        }
+      ]
+    }
+  }
+}

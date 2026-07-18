@@ -1,0 +1,88 @@
+/* Protequ house livery for the adapter developer docs.
+   Tokens mirror .github/templates/setup-guide.html: dark #1a1b22 ground,
+   cyan #00b0f0 accent ("PQ glow"), frosted hairlines. */
+
+:root {
+  --md-primary-fg-color:        #00b0f0;
+  --md-primary-fg-color--light: #33c1f3;
+  --md-primary-fg-color--dark:  #0090c8;
+  --md-accent-fg-color:         #00b0f0;
+  --pq-pink:                    #ffaaaa;
+}
+
+/* Cyan links + accents read well on both grounds. */
+[data-md-color-accent="custom"],
+.md-typeset a {
+  color: var(--md-accent-fg-color);
+}
+
+/* ── Dark scheme (default) — the CCTV-wall ground ─────────────────────────── */
+[data-md-color-scheme="slate"] {
+  --md-hue: 232;
+  --md-default-bg-color:        #1a1b22;
+  --md-default-fg-color:        #f1f3f6;
+  --md-default-fg-color--light: #a3a8b3;
+  --md-default-fg-color--lighter: #6c7180;
+  --md-code-bg-color:           #14151b;
+  --md-code-fg-color:           #e6e9ee;
+  --md-typeset-a-color:         #00b0f0;
+  --md-footer-bg-color:         #15161c;
+}
+
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: rgba(26, 27, 34, 0.85);
+  backdrop-filter: blur(8px);
+  color: #f1f3f6;
+}
+
+/* Subtle cyan/pink glow behind the header, echoing the setup guide hero. */
+[data-md-color-scheme="slate"] .md-header {
+  background-image:
+    radial-gradient(900px 240px at 15% -80%, rgba(0, 176, 240, 0.14), transparent 60%),
+    radial-gradient(700px 220px at 98% -80%, rgba(255, 170, 170, 0.08), transparent 64%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Light scheme ─────────────────────────────────────────────────────────── */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #0090c8;
+  --md-accent-fg-color:  #0090c8;
+  --md-typeset-a-color:  #0090c8;
+}
+[data-md-color-scheme="default"] .md-header {
+  background-color: #ffffff;
+  color: #191b22;
+  border-bottom: 1px solid rgba(20, 22, 34, 0.09);
+}
+[data-md-color-scheme="default"] .md-header .md-header__title,
+[data-md-color-scheme="default"] .md-header .md-icon,
+[data-md-color-scheme="default"] .md-tabs {
+  color: #191b22;
+}
+
+/* Rounder code blocks + admonitions to match the mockup. */
+.md-typeset pre > code,
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 10px;
+}
+
+/* Cyan left rail on the active nav item. */
+.md-nav__link--active {
+  color: var(--md-accent-fg-color);
+  font-weight: 600;
+}
+
+/* Tables get hairline borders instead of Material's heavy rules. */
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: #23242c;
+}
+
+/* The brand mark in the header sits a touch larger, like the mockup. */
+.md-header__button.md-logo img {
+  height: 1.5rem;
+}
