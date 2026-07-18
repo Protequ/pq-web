@@ -54,14 +54,36 @@
   color: #191b22;
   border-bottom: 1px solid rgba(20, 22, 34, 0.09);
 }
-[data-md-color-scheme="default"] .md-header .md-header__title,
 [data-md-color-scheme="default"] .md-header .md-icon { color: #191b22; }
-.md-header__title { font-weight: 700; letter-spacing: -0.01em; }
 
-/* Cyan glow around the PQ brand mark. */
+/* Two-tone white→cyan header title, echoing the pq-web hero heading. */
+.md-header__title { font-weight: 800; letter-spacing: -0.01em; }
+.md-header__title .md-ellipsis {
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+[data-md-color-scheme="slate"] .md-header__title .md-ellipsis {
+  background-image: linear-gradient(90deg, #ffffff 42%, #00b0f0 100%);
+}
+[data-md-color-scheme="default"] .md-header__title .md-ellipsis {
+  background-image: linear-gradient(90deg, #191b22 42%, #0090c8 100%);
+}
+
+/* Pulsing cyan glow around the PQ brand mark (matches the pq-web hero mark). */
+.md-header__button.md-logo { padding: 0.2rem 0.4rem 0.2rem 0.6rem; }
 .md-header__button.md-logo img,
-.md-header__button.md-logo svg { height: 1.6rem; width: auto;
-  filter: drop-shadow(0 0 5px rgba(0, 176, 240, 0.6)); }
+.md-header__button.md-logo svg {
+  height: 2.1rem; width: auto;
+  filter: drop-shadow(0 0 7px rgba(0, 176, 240, 0.7));
+  animation: pq-logo-glow 2.4s ease-in-out infinite;
+}
+@keyframes pq-logo-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(0, 176, 240, 0.5)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(0, 176, 240, 0.85)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .md-header__button.md-logo img,
+  .md-header__button.md-logo svg { animation: none; }
+}
 
 /* ── Gradient display H1, like the mockup ──────────────────────────────────── */
 .md-typeset h1 { font-weight: 800; letter-spacing: -0.02em; }

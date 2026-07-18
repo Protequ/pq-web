@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://protequ.github.io/pq-web/docs/patterns/03-connection-management/">
+        <link rel="canonical" href="https://protequ.github.io/pq-web/docs/patterns/">
       
       
-        <link rel="prev" href="../02-event-translation/">
+        <link rel="prev" href="../examples/minimal-generated-adapter/">
       
       
-        <link rel="next" href="../04-command-handling/">
+        <link rel="next" href="01-access-synchronization/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/pq-logo.svg">
+      <link rel="icon" href="../assets/pq-logo.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Pattern 3: Connection Management - Protequ Adapter Developer Docs</title>
+        <title>Patterns - Protequ Adapter Developer Docs</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pattern-3-connection-management" class="md-skip">
+        <a href="#patterns" class="md-skip">
           Skip to content
         </a>
       
@@ -96,9 +96,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Protequ Adapter Developer Docs" class="md-header__button md-logo" aria-label="Protequ Adapter Developer Docs" data-md-component="logo">
+    <a href=".." title="Protequ Adapter Developer Docs" class="md-header__button md-logo" aria-label="Protequ Adapter Developer Docs" data-md-component="logo">
       
-  <img src="../../assets/pq-logo.svg" alt="logo">
+  <img src="../assets/pq-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pattern 3: Connection Management
+              Patterns
             
           </span>
         </div>
@@ -221,9 +221,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Protequ Adapter Developer Docs" class="md-nav__button md-logo" aria-label="Protequ Adapter Developer Docs" data-md-component="logo">
+    <a href=".." title="Protequ Adapter Developer Docs" class="md-nav__button md-logo" aria-label="Protequ Adapter Developer Docs" data-md-component="logo">
       
-  <img src="../../assets/pq-logo.svg" alt="logo">
+  <img src="../assets/pq-logo.svg" alt="logo">
 
     </a>
     Protequ Adapter Developer Docs
@@ -238,7 +238,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -265,7 +265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../00-overview/" class="md-nav__link">
+      <a href="../00-overview/" class="md-nav__link">
         
   
   
@@ -292,7 +292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../01-step-by-step/" class="md-nav__link">
+      <a href="../01-step-by-step/" class="md-nav__link">
         
   
   
@@ -319,7 +319,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../02-patterns/" class="md-nav__link">
+      <a href="../02-patterns/" class="md-nav__link">
         
   
   
@@ -346,7 +346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../03-troubleshooting/" class="md-nav__link">
+      <a href="../03-troubleshooting/" class="md-nav__link">
         
   
   
@@ -373,7 +373,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../GETTING-STARTED/" class="md-nav__link">
+      <a href="../GETTING-STARTED/" class="md-nav__link">
         
   
   
@@ -400,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adapter-checklist/" class="md-nav__link">
+      <a href="../adapter-checklist/" class="md-nav__link">
         
   
   
@@ -427,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../definition-of-done/" class="md-nav__link">
+      <a href="../definition-of-done/" class="md-nav__link">
         
   
   
@@ -454,7 +454,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../local-development-setup/" class="md-nav__link">
+      <a href="../local-development-setup/" class="md-nav__link">
         
   
   
@@ -481,7 +481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modeling-conventions/" class="md-nav__link">
+      <a href="../modeling-conventions/" class="md-nav__link">
         
   
   
@@ -543,7 +543,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../archetypes/" class="md-nav__link ">
+            <a href="../archetypes/" class="md-nav__link ">
               
   
   
@@ -587,7 +587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/cctv-nvr/" class="md-nav__link">
+      <a href="../archetypes/cctv-nvr/" class="md-nav__link">
         
   
   
@@ -615,7 +615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/gateway-grpc/" class="md-nav__link">
+      <a href="../archetypes/gateway-grpc/" class="md-nav__link">
         
   
   
@@ -643,7 +643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/generated-only/" class="md-nav__link">
+      <a href="../archetypes/generated-only/" class="md-nav__link">
         
   
   
@@ -671,7 +671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/http-streaming/" class="md-nav__link">
+      <a href="../archetypes/http-streaming/" class="md-nav__link">
         
   
   
@@ -699,7 +699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/native-sdk-shared-transport/" class="md-nav__link">
+      <a href="../archetypes/native-sdk-shared-transport/" class="md-nav__link">
         
   
   
@@ -727,7 +727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../archetypes/tcp-request-reply/" class="md-nav__link">
+      <a href="../archetypes/tcp-request-reply/" class="md-nav__link">
         
   
   
@@ -829,7 +829,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../concepts/" class="md-nav__link ">
+            <a href="../concepts/" class="md-nav__link ">
               
   
   
@@ -873,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/access-control-assembly/" class="md-nav__link">
+      <a href="../concepts/access-control-assembly/" class="md-nav__link">
         
   
   
@@ -901,7 +901,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/card-wire-bit-length/" class="md-nav__link">
+      <a href="../concepts/card-wire-bit-length/" class="md-nav__link">
         
   
   
@@ -929,7 +929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/channels/" class="md-nav__link">
+      <a href="../concepts/channels/" class="md-nav__link">
         
   
   
@@ -957,7 +957,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/code-generation/" class="md-nav__link">
+      <a href="../concepts/code-generation/" class="md-nav__link">
         
   
   
@@ -985,7 +985,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/commands/" class="md-nav__link">
+      <a href="../concepts/commands/" class="md-nav__link">
         
   
   
@@ -1013,7 +1013,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/communication-overview/" class="md-nav__link">
+      <a href="../concepts/communication-overview/" class="md-nav__link">
         
   
   
@@ -1041,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/device-timestamps/" class="md-nav__link">
+      <a href="../concepts/device-timestamps/" class="md-nav__link">
         
   
   
@@ -1069,7 +1069,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/door-behavior-contract/" class="md-nav__link">
+      <a href="../concepts/door-behavior-contract/" class="md-nav__link">
         
   
   
@@ -1097,7 +1097,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/event-intercepting/" class="md-nav__link">
+      <a href="../concepts/event-intercepting/" class="md-nav__link">
         
   
   
@@ -1125,7 +1125,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/event-routing/" class="md-nav__link">
+      <a href="../concepts/event-routing/" class="md-nav__link">
         
   
   
@@ -1153,7 +1153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/event-types/" class="md-nav__link">
+      <a href="../concepts/event-types/" class="md-nav__link">
         
   
   
@@ -1181,7 +1181,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/events/" class="md-nav__link">
+      <a href="../concepts/events/" class="md-nav__link">
         
   
   
@@ -1209,7 +1209,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/framework-architecture/" class="md-nav__link">
+      <a href="../concepts/framework-architecture/" class="md-nav__link">
         
   
   
@@ -1237,7 +1237,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/functions/" class="md-nav__link">
+      <a href="../concepts/functions/" class="md-nav__link">
         
   
   
@@ -1265,7 +1265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/persistent-storage/" class="md-nav__link">
+      <a href="../concepts/persistent-storage/" class="md-nav__link">
         
   
   
@@ -1293,7 +1293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/properties/" class="md-nav__link">
+      <a href="../concepts/properties/" class="md-nav__link">
         
   
   
@@ -1321,7 +1321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/protocol/" class="md-nav__link">
+      <a href="../concepts/protocol/" class="md-nav__link">
         
   
   
@@ -1349,7 +1349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/status/" class="md-nav__link">
+      <a href="../concepts/status/" class="md-nav__link">
         
   
   
@@ -1377,7 +1377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/tcp-transport/" class="md-nav__link">
+      <a href="../concepts/tcp-transport/" class="md-nav__link">
         
   
   
@@ -1405,7 +1405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/thing-queries/" class="md-nav__link">
+      <a href="../concepts/thing-queries/" class="md-nav__link">
         
   
   
@@ -1433,7 +1433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/things/" class="md-nav__link">
+      <a href="../concepts/things/" class="md-nav__link">
         
   
   
@@ -1461,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/video-streaming/" class="md-nav__link">
+      <a href="../concepts/video-streaming/" class="md-nav__link">
         
   
   
@@ -1523,7 +1523,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../examples/" class="md-nav__link ">
+            <a href="../examples/" class="md-nav__link ">
               
   
   
@@ -1567,7 +1567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/http-streaming-adapter/" class="md-nav__link">
+      <a href="../examples/http-streaming-adapter/" class="md-nav__link">
         
   
   
@@ -1595,7 +1595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/minimal-generated-adapter/" class="md-nav__link">
+      <a href="../examples/minimal-generated-adapter/" class="md-nav__link">
         
   
   
@@ -1695,7 +1695,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="./" class="md-nav__link md-nav__link--active">
               
   
   
@@ -1713,7 +1713,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="">
+              <label class="md-nav__link md-nav__link--active" for="__nav_14" id="__nav_14_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -1739,7 +1739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-access-synchronization/" class="md-nav__link">
+      <a href="01-access-synchronization/" class="md-nav__link">
         
   
   
@@ -1767,7 +1767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-event-translation/" class="md-nav__link">
+      <a href="02-event-translation/" class="md-nav__link">
         
   
   
@@ -1792,37 +1792,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Pattern 3: Connection Management
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="03-connection-management/" class="md-nav__link">
         
   
   
@@ -1838,81 +1811,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#primary-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Primary Pattern
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connection-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-transport-responsibilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Transport Responsibilities
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1925,7 +1823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-command-handling/" class="md-nav__link">
+      <a href="04-command-handling/" class="md-nav__link">
         
   
   
@@ -1953,7 +1851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-custom-functions/" class="md-nav__link">
+      <a href="05-custom-functions/" class="md-nav__link">
         
   
   
@@ -1981,7 +1879,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-shared-resources/" class="md-nav__link">
+      <a href="06-shared-resources/" class="md-nav__link">
         
   
   
@@ -2009,7 +1907,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-address-resolution/" class="md-nav__link">
+      <a href="07-address-resolution/" class="md-nav__link">
         
   
   
@@ -2037,7 +1935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-biometric-enrollment/" class="md-nav__link">
+      <a href="08-biometric-enrollment/" class="md-nav__link">
         
   
   
@@ -2065,7 +1963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-event-publishing/" class="md-nav__link">
+      <a href="09-event-publishing/" class="md-nav__link">
         
   
   
@@ -2093,7 +1991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-error-handling/" class="md-nav__link">
+      <a href="10-error-handling/" class="md-nav__link">
         
   
   
@@ -2121,7 +2019,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../11-testing-without-hardware/" class="md-nav__link">
+      <a href="11-testing-without-hardware/" class="md-nav__link">
         
   
   
@@ -2149,7 +2047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../12-status-polling/" class="md-nav__link">
+      <a href="12-status-polling/" class="md-nav__link">
         
   
   
@@ -2177,7 +2075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../13-optimistic-commands/" class="md-nav__link">
+      <a href="13-optimistic-commands/" class="md-nav__link">
         
   
   
@@ -2205,7 +2103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../14-device-config-import/" class="md-nav__link">
+      <a href="14-device-config-import/" class="md-nav__link">
         
   
   
@@ -2233,7 +2131,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../15-enrollment-process/" class="md-nav__link">
+      <a href="15-enrollment-process/" class="md-nav__link">
         
   
   
@@ -2261,7 +2159,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../16-video-events/" class="md-nav__link">
+      <a href="16-video-events/" class="md-nav__link">
         
   
   
@@ -2289,7 +2187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../17-event-replay-deduplication/" class="md-nav__link">
+      <a href="17-event-replay-deduplication/" class="md-nav__link">
         
   
   
@@ -2317,7 +2215,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../18-protocol-sequences/" class="md-nav__link">
+      <a href="18-protocol-sequences/" class="md-nav__link">
         
   
   
@@ -2345,7 +2243,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../19-stream-registration/" class="md-nav__link">
+      <a href="19-stream-registration/" class="md-nav__link">
         
   
   
@@ -2373,7 +2271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../event-mapping-guide/" class="md-nav__link">
+      <a href="event-mapping-guide/" class="md-nav__link">
         
   
   
@@ -2447,7 +2345,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../reference/" class="md-nav__link ">
               
   
   
@@ -2491,7 +2389,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/capabilities-coverage/" class="md-nav__link">
+      <a href="../reference/capabilities-coverage/" class="md-nav__link">
         
   
   
@@ -2519,7 +2417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/capability-catalog/" class="md-nav__link">
+      <a href="../reference/capability-catalog/" class="md-nav__link">
         
   
   
@@ -2547,7 +2445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/dependency-injection/" class="md-nav__link">
+      <a href="../reference/dependency-injection/" class="md-nav__link">
         
   
   
@@ -2575,7 +2473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/function-call-patterns/" class="md-nav__link">
+      <a href="../reference/function-call-patterns/" class="md-nav__link">
         
   
   
@@ -2603,7 +2501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions-registry/" class="md-nav__link">
+      <a href="../reference/functions-registry/" class="md-nav__link">
         
   
   
@@ -2631,7 +2529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/generated-code-api/" class="md-nav__link">
+      <a href="../reference/generated-code-api/" class="md-nav__link">
         
   
   
@@ -2659,7 +2557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/yaml-properties/" class="md-nav__link">
+      <a href="../reference/yaml-properties/" class="md-nav__link">
         
   
   
@@ -2786,7 +2684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/access-synchronization/" class="md-nav__link">
+      <a href="../reference/functions/access-synchronization/" class="md-nav__link">
         
   
   
@@ -2814,7 +2712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/antipassback-synchronization/" class="md-nav__link">
+      <a href="../reference/functions/antipassback-synchronization/" class="md-nav__link">
         
   
   
@@ -2842,7 +2740,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/comm/" class="md-nav__link">
+      <a href="../reference/functions/comm/" class="md-nav__link">
         
   
   
@@ -2870,7 +2768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/connection-base/" class="md-nav__link">
+      <a href="../reference/functions/connection-base/" class="md-nav__link">
         
   
   
@@ -2898,7 +2796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/door/" class="md-nav__link">
+      <a href="../reference/functions/door/" class="md-nav__link">
         
   
   
@@ -2926,7 +2824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-control-output/" class="md-nav__link">
+      <a href="../reference/functions/fire-control-output/" class="md-nav__link">
         
   
   
@@ -2954,7 +2852,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-detector/" class="md-nav__link">
+      <a href="../reference/functions/fire-detector/" class="md-nav__link">
         
   
   
@@ -2982,7 +2880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-panel/" class="md-nav__link">
+      <a href="../reference/functions/fire-panel/" class="md-nav__link">
         
   
   
@@ -3010,7 +2908,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-point/" class="md-nav__link">
+      <a href="../reference/functions/fire-point/" class="md-nav__link">
         
   
   
@@ -3038,7 +2936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-routing/" class="md-nav__link">
+      <a href="../reference/functions/fire-routing/" class="md-nav__link">
         
   
   
@@ -3066,7 +2964,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/fire-sounder/" class="md-nav__link">
+      <a href="../reference/functions/fire-sounder/" class="md-nav__link">
         
   
   
@@ -3094,7 +2992,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/history-poll/" class="md-nav__link">
+      <a href="../reference/functions/history-poll/" class="md-nav__link">
         
   
   
@@ -3122,7 +3020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/input/" class="md-nav__link">
+      <a href="../reference/functions/input/" class="md-nav__link">
         
   
   
@@ -3150,7 +3048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/intrusion-detector/" class="md-nav__link">
+      <a href="../reference/functions/intrusion-detector/" class="md-nav__link">
         
   
   
@@ -3178,7 +3076,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/output/" class="md-nav__link">
+      <a href="../reference/functions/output/" class="md-nav__link">
         
   
   
@@ -3206,7 +3104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/partition/" class="md-nav__link">
+      <a href="../reference/functions/partition/" class="md-nav__link">
         
   
   
@@ -3234,7 +3132,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/power/" class="md-nav__link">
+      <a href="../reference/functions/power/" class="md-nav__link">
         
   
   
@@ -3262,7 +3160,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/reader/" class="md-nav__link">
+      <a href="../reference/functions/reader/" class="md-nav__link">
         
   
   
@@ -3290,7 +3188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/security-keypad/" class="md-nav__link">
+      <a href="../reference/functions/security-keypad/" class="md-nav__link">
         
   
   
@@ -3318,7 +3216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/sounder-supervision/" class="md-nav__link">
+      <a href="../reference/functions/sounder-supervision/" class="md-nav__link">
         
   
   
@@ -3346,7 +3244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/sounder/" class="md-nav__link">
+      <a href="../reference/functions/sounder/" class="md-nav__link">
         
   
   
@@ -3374,7 +3272,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/status-poll/" class="md-nav__link">
+      <a href="../reference/functions/status-poll/" class="md-nav__link">
         
   
   
@@ -3402,7 +3300,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/tamper/" class="md-nav__link">
+      <a href="../reference/functions/tamper/" class="md-nav__link">
         
   
   
@@ -3430,7 +3328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/functions/time-synchronization/" class="md-nav__link">
+      <a href="../reference/functions/time-synchronization/" class="md-nav__link">
         
   
   
@@ -3504,7 +3402,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../tutorials/" class="md-nav__link ">
+            <a href="../tutorials/" class="md-nav__link ">
               
   
   
@@ -3548,7 +3446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/00-hello-world/" class="md-nav__link">
+      <a href="../tutorials/00-hello-world/" class="md-nav__link">
         
   
   
@@ -3576,7 +3474,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/01-yaml-configuration/" class="md-nav__link">
+      <a href="../tutorials/01-yaml-configuration/" class="md-nav__link">
         
   
   
@@ -3604,7 +3502,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/02-event-flow-walkthrough/" class="md-nav__link">
+      <a href="../tutorials/02-event-flow-walkthrough/" class="md-nav__link">
         
   
   
@@ -3632,7 +3530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/03-access-synchronization/" class="md-nav__link">
+      <a href="../tutorials/03-access-synchronization/" class="md-nav__link">
         
   
   
@@ -3680,69 +3578,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#primary-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Primary Pattern
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connection-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-transport-responsibilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Transport Responsibilities
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3758,98 +3593,28 @@
 
 
 
-<h1 id="pattern-3-connection-management">Pattern 3: Connection Management<a class="headerlink" href="#pattern-3-connection-management" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><strong>Start here:</strong> For overall communication architecture, see <a href="../../concepts/communication-overview/">Communication Overview</a>.</p>
-<p><strong>TCP devices:</strong> If your device communicates over TCP request/reply, prefer the framework TCP transport instead of raw <code>TcpClient</code>. See <a href="../../concepts/tcp-transport/">TCP Transport</a> and <a href="../../archetypes/tcp-request-reply/">TCP Request-Reply</a>. Custom transport code is for native SDK, gateway, streaming, or protocol-specific lifecycle needs.</p>
-</blockquote>
-<h2 id="primary-pattern">Primary Pattern<a class="headerlink" href="#primary-pattern" title="Permanent link">&para;</a></h2>
-<p>Implement <code>IDeviceConnection</code> on the root Thing. <code>Connect</code> returns <code>true</code> only after the device is authenticated, initialized, and ready for commands/events. <code>Disconnect</code> tears down protocol resources. The framework owns lifecycle state, retry, debouncing, metrics, and connection status publication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nf">Controller</span><span class="p">(</span><span class="n">Transport</span><span class="w"> </span><span class="n">transport</span><span class="p">,</span><span class="w"> </span><span class="n">ILogger</span><span class="o">&lt;</span><span class="n">Controller</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="n">IDynamicProtocolAddressable</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">IDeviceConnection</span><span class="p">,</span><span class="w"> </span><span class="n">IConnectionAware</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">{</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DynamicAddress</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Address</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Connect</span><span class="p">(</span><span class="n">ConnectionContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">            </span><span class="s">&quot;Connecting to controller (attempt={Attempt}, reconnect={Reconnect})&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">            </span><span class="n">context</span><span class="p">.</span><span class="n">AttemptNumber</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">            </span><span class="n">context</span><span class="p">.</span><span class="n">IsReconnect</span><span class="p">);</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="n">Address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">transport</span><span class="p">.</span><span class="n">ConnectController</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Address</span><span class="p">.</span><span class="n">HasValue</span><span class="p">)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="n">Protocol</span><span class="p">.</span><span class="n">ProtocolId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Address</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">await</span><span class="w"> </span><span class="n">Protocol</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">ct</span><span class="p">))</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="p">{</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">            </span><span class="k">await</span><span class="w"> </span><span class="n">transport</span><span class="p">.</span><span class="n">DisconnectController</span><span class="p">(</span><span class="n">Address</span><span class="p">.</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="n">Address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DynamicAddress</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">.</span><span class="n">None</span><span class="p">;</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="n">Protocol</span><span class="p">.</span><span class="n">ProtocolId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">Disconnect</span><span class="p">(</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">)</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Address</span><span class="p">.</span><span class="n">HasValue</span><span class="p">)</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">            </span><span class="k">return</span><span class="p">;</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">        </span><span class="n">Protocol</span><span class="p">.</span><span class="n">ProtocolId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">transport</span><span class="p">.</span><span class="n">DisconnectController</span><span class="p">(</span><span class="n">Address</span><span class="p">.</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">        </span><span class="n">Address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DynamicAddress</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">.</span><span class="n">None</span><span class="p">;</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">OnConnected</span><span class="p">(</span><span class="n">ConnectionContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">&quot;Controller connected&quot;</span><span class="p">);</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">CompletedTask</span><span class="p">;</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">OnDisconnected</span><span class="p">(</span><span class="n">ConnectionContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">&quot;Controller disconnected&quot;</span><span class="p">);</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">CompletedTask</span><span class="p">;</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="p">}</span>
-</code></pre></div>
-<h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2>
+<h1 id="patterns">Patterns<a class="headerlink" href="#patterns" title="Permanent link">&para;</a></h1>
+<p>Reusable implementation patterns for common adapter tasks — access sync, event translation, connection management and more.</p>
 <ul>
-<li>Return <code>false</code> from <code>Connect()</code> to trigger framework retry.</li>
-<li>Return <code>true</code> only after authentication, initialization, address binding, and event/polling readiness are complete.</li>
-<li>Do not call raw <code>SignalConnected()</code> or <code>SignalDisconnected()</code> in normal <code>IDeviceConnection</code> implementations; that is legacy/custom-only lifecycle plumbing.</li>
-<li>Run background receive loops, alert streams, SDK event streams, or gateway monitors from services that cleanly stop on disconnect.</li>
-<li>Keep long-lived services ID/address based; do not retain direct Thing references across async callbacks or timers.</li>
-<li>Implement <code>IConnectionAware</code> when the adapter needs post-connect or post-disconnect cleanup such as stream registry clearing.</li>
-</ul>
-<h2 id="connection-lifecycle">Connection Lifecycle<a class="headerlink" href="#connection-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>stateDiagram-v2
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    [*] --&gt; Offline
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    Offline --&gt; Connecting: framework calls Connect()
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    Connecting --&gt; Online: Connect() returns true
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    Connecting --&gt; Offline: Connect() returns false or throws
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    Online --&gt; Offline: Disconnect(), stream failure, watchdog, or transport loss
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    Offline --&gt; Connecting: framework retry
-</code></pre></div>
-<h2 id="custom-transport-responsibilities">Custom Transport Responsibilities<a class="headerlink" href="#custom-transport-responsibilities" title="Permanent link">&para;</a></h2>
-<p>For native SDK, gateway, HTTP stream, or other custom transports, document and implement:</p>
-<ul>
-<li>external process/native library startup and shutdown</li>
-<li>authentication and initialization sequence</li>
-<li>event stream/message pump lifecycle</li>
-<li>heartbeat/watchdog behavior</li>
-<li>reconnect cleanup and stale resource cleanup</li>
-<li>address binding between protocol IDs and Things</li>
-<li>event replay or event loss semantics</li>
-</ul>
-<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../10-error-handling/">Pattern 10: Error Handling</a> - retry strategies</li>
-<li><a href="../12-status-polling/">Pattern 12: Status Polling</a> - polling respects connection lifecycle</li>
+<li><a href="01-access-synchronization/">Pattern 1: Access Synchronization</a></li>
+<li><a href="02-event-translation/">Pattern 2: Event Translation</a></li>
+<li><a href="03-connection-management/">Pattern 3: Connection Management</a></li>
+<li><a href="04-command-handling/">04-command-handling</a></li>
+<li><a href="05-custom-functions/">Pattern 5: Custom Functions</a></li>
+<li><a href="06-shared-resources/">Pattern 6: Shared Resources with ISharedResource</a></li>
+<li><a href="07-address-resolution/">Pattern 7: Address Resolution and Thing Queries</a></li>
+<li><a href="08-biometric-enrollment/">Pattern 8: Biometric Enrollment</a></li>
+<li><a href="09-event-publishing/">Pattern 9: Event Publishing Best Practices</a></li>
+<li><a href="10-error-handling/">Pattern 10: Error Handling</a></li>
+<li><a href="11-testing-without-hardware/">Pattern 11: Testing Without Hardware</a></li>
+<li><a href="12-status-polling/">Pattern 12: Status Polling</a></li>
+<li><a href="13-optimistic-commands/">Pattern 13: Optimistic Command Execution</a></li>
+<li><a href="14-device-config-import/">14-device-config-import</a></li>
+<li><a href="15-enrollment-process/">Pattern 15: Enrollment Process</a></li>
+<li><a href="16-video-events/">Pattern 16: Video Event Mapping</a></li>
+<li><a href="17-event-replay-deduplication/">Pattern 17: Event Replay Deduplication</a></li>
+<li><a href="18-protocol-sequences/">Pattern 18: Multi-Step Protocol Sequences</a></li>
+<li><a href="event-mapping-guide/">Event Mapping Guide</a></li>
 </ul>
 
 
@@ -3906,10 +3671,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.tracking", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "navigation.tracking", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

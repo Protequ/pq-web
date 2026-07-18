@@ -1,0 +1,10 @@
+/* PQ brand palette — matches the Blazor client primary (#00B0F0). */
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: #00B0F0;
+  --md-primary-fg-color--light: #33bff3;
+  --md-primary-fg-color--dark: #0090c8;
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: #0090c8;
+}
