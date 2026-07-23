@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Protequ — Pre-Installation Checklist</title>
+<style>
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-surface: #1e2a45;
+  --bg-input: #0f1629;
+  --text-primary: #e0e0e0;
+  --text-secondary: #8892a4;
+  --text-muted: #5a6478;
+  --accent: #00b0f0;
+  --accent-hover: #33c4ff;
+  --success: #4caf50;
+  --error: #f44336;
+  --warning: #ff9800;
+  --amber: #ffc107;
+  --border: #2a3550;
+  --border-light: #354265;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 32px 64px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.logo-glow {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  animation: pq-glow 2.5s ease-in-out infinite;
+  overflow: hidden;
+}
+.logo-glow svg { width: 56px; height: 56px; border-radius: 50%; display: block; }
+
+@keyframes pq-glow {
+  0%, 100% { box-shadow: 0 0 10px 3px rgba(0, 176, 240, 0.45); }
+  50%      { box-shadow: 0 0 20px 8px rgba(0, 176, 240, 0.85); }
+}
+
+.header-text { flex: 1; }
+.brand {
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.title {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.meta-badges {
+  display: flex; gap: 8px;
+  align-items: center;
+}
+.badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: 'Consolas', monospace;
+}
+
+/* ---------- Section header ---------- */
+.part-header {
+  margin: 40px 0 18px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.part-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.part-title {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+.part-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ---------- Section blocks ---------- */
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 14px;
+}
+
+.section.critical {
+  border-color: rgba(255, 193, 7, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.15), 0 0 20px rgba(255, 193, 7, 0.08);
+}
+
+.section-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.section-num {
+  font-family: 'Consolas', monospace;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+.section.critical .section-num { color: var(--amber); }
+
+.section-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+}
+.section-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(255, 193, 7, 0.15);
+  color: var(--amber);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.section-body { color: var(--text-secondary); font-size: 13px; }
+
+/* ---------- Check list ---------- */
+.check-list { list-style: none; }
+.check-list li {
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+.check-list li::before {
+  content: '';
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.check-list li .hint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* ---------- OS split blocks ---------- */
+.os-block {
+  border-left: 2px solid var(--border-light);
+  padding-left: 14px;
+  margin-top: 14px;
+}
+.os-block + .os-block { margin-top: 18px; }
+.os-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* ---------- Tier cards ---------- */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 6px;
+}
+.tier {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.tier.recommended {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0, 176, 240, 0.25), 0 0 24px rgba(0, 176, 240, 0.12);
+  position: relative;
+}
+.tier.recommended::before {
+  content: 'RECOMMENDED';
+  position: absolute;
+  top: -8px; right: 12px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  background: var(--accent);
+  color: #000;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.tier-name {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.tier.recommended .tier-name { color: var(--accent); }
+.tier-use {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  margin-bottom: 14px;
+}
+.tier-spec {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tier-spec:last-child { border-bottom: none; }
+.tier-spec .k { color: var(--text-secondary); }
+.tier-spec .v {
+  color: var(--text-primary);
+  font-family: 'Consolas', monospace;
+  font-weight: 600;
+}
+
+/* ---------- Port row ---------- */
+.ports {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 8px;
+}
+.port {
+  font-family: 'Consolas', monospace;
+  font-size: 12px;
+  padding: 5px 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* ---------- Code block ---------- */
+.code {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 12px;
+  color: var(--text-primary);
+  line-height: 1.65;
+  overflow-x: auto;
+  white-space: pre;
+  margin-top: 8px;
+}
+.code .cmt { color: var(--text-muted); }
+.code .cmd { color: var(--accent); }
+.code .str { color: var(--success); }
+
+/* ---------- Footer ---------- */
+.footer {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- Print ---------- */
+@media print {
+  html, body { background: white; color: #1a1a2e; }
+  .page { padding: 0; max-width: none; }
+  .section, .tier, .code, .badge, .port {
+    background: white !important;
+    border-color: #ccc !important;
+    color: #1a1a2e !important;
+    box-shadow: none !important;
+  }
+  .tier.recommended { border-color: #00b0f0 !important; }
+  .section.critical { border-color: #ff9800 !important; }
+  .logo-glow { animation: none !important; box-shadow: none !important; }
+  .brand, .part-label, .section-num { color: #007ec0 !important; }
+  .accent, a { color: #00b0f0 !important; }
+  .check-list li::before { border-color: #444 !important; }
+  .os-block { border-color: #ccc !important; }
+  .os-label { color: #007ec0 !important; }
+  .code .cmt { color: #777 !important; }
+  .code .cmd { color: #007ec0 !important; }
+  .code .str { color: #2e7d32 !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="logo-glow">
+      <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Protequ"><g transform="translate(0,1024) scale(0.1,-0.1)" fill="#000000" stroke="none"><path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0 -5120z m7320 1715 c259 -32 531 -95 848 -197 l193 -62 -4 -721 c-3 -624 -6 -733 -21 -815 -52 -290 -136 -491 -306 -733 -77 -110 -351 -388 -490 -498 -108 -86 -259 -193 -264 -188 -71 84 -207 251 -204 253 43 25 260 199 339 273 296 275 447 485 534 746 66 198 67 212 72 848 l4 576 -178 51 c-345 100 -656 150 -878 139 -120 -6 -330 -42 -414 -72 -24 -8 -47 -15 -51 -15 -4 0 -52 37 -106 81 -55 45 -116 93 -136 108 -21 14 -38 29 -38 33 0 14 146 93 230 124 88 34 246 68 385 84 103 11 326 5 485 -15z m-1745 -145 c297 -28 532 -127 743 -313 372 -327 538 -866 442 -1432 -30 -177 -108 -388 -191 -517 -19 -29 -28 -52 -23 -60 5 -7 139 -194 300 -414 160 -221 294 -406 297 -411 4 -6 -26 -27 -66 -48 l-73 -38 -134 73 c-277 150 -429 258 -577 407 l-102 104 -88 -53 c-147 -89 -310 -145 -491 -169 -110 -15 -352 -7 -450 15 -230 50 -482 184 -619 327 -124 131 -260 354 -321 529 -147 421 -117 912 80 1304 59 117 104 186 181 274 270 310 664 462 1092 422z m-2450 -30 c298 -34 535 -168 685 -385 48 -70 108 -202 131 -290 47 -180 34 -431 -32 -623 -91 -270 -314 -468 -618 -550 -94 -25 -105 -26 -478 -30 l-383 -4 0 -464 0 -464 -273 0 c-199 0 -276 3 -285 12 -9 9 -12 335 -12 1403 0 766 3 1395 7 1398 11 11 1159 8 1258 -3z"/><path d="M5281 6155 c-143 -33 -289 -133 -386 -265 -207 -282 -255 -785 -106 -1114 63 -140 207 -300 328 -364 182 -96 457 -97 648 -2 33 17 68 37 79 44 18 14 17 16 -5 48 -13 18 -114 160 -226 315 -112 155 -203 285 -203 288 0 3 130 5 289 5 l289 0 83 -120 c46 -66 86 -120 89 -120 12 0 51 175 62 280 22 206 -15 420 -101 595 -104 209 -262 345 -466 401 -84 22 -292 27 -374 9z"/><path d="M2430 5719 l0 -424 322 6 c336 7 371 11 464 55 124 58 193 208 181 394 -7 122 -35 191 -106 261 -103 101 -180 118 -578 126 l-283 6 0 -424z"/></g></svg>
+    </div>
+    <div class="header-text">
+      <div class="brand">Protequ</div>
+      <div class="title">Pre-Installation Checklist</div>
+      <div class="subtitle">Hardware &amp; OS prerequisites for IT administrators — Windows &amp; Linux</div>
+    </div>
+    <div class="meta-badges">
+      <span class="badge">v1.1</span>
+      <span class="badge">2026-07-23</span>
+    </div>
+  </header>
+
+  <!-- ========== PART A — SIZING ========== -->
+  <div class="part-header">
+    <span class="part-label">Part A</span>
+    <span class="part-title">Server sizing</span>
+    <span class="part-rule"></span>
+  </div>
+
+  <!-- §A.1 Hardware Sizing -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§A.1</span>
+      <span class="section-title">Hardware sizing</span>
+    </div>
+    <div class="section-body">Choose the tier matching your deployment size — the same tiers apply to both Windows and Linux hosts. Each host runs ~13 containers (Postgres, Keycloak, NATS, Typesense, server, adapters, go2rtc). Sizing scales with the number of integrated <strong>devices</strong> (controllers, readers, doors, cameras, panels), not the number of people.</div>
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-name">Small</div>
+        <div class="tier-use">PoC · demo · &lt; 25 devices</div>
+        <div class="tier-spec"><span class="k">RAM</span><span class="v">16 GB</span></div>
+        <div class="tier-spec"><span class="k">vCPU</span><span class="v">4 cores</span></div>
+        <div class="tier-spec"><span class="k">Disk</span><span class="v">100 GB SSD</span></div>
+        <div class="tier-spec"><span class="k">Network</span><span class="v">1 GbE</span></div>
+      </div>
+      <div class="tier recommended">
+        <div class="tier-name">Medium</div>
+        <div class="tier-use">Office · 25–250 devices</div>
+        <div class="tier-spec"><span class="k">RAM</span><span class="v">32 GB</span></div>
+        <div class="tier-spec"><span class="k">vCPU</span><span class="v">8 cores</span></div>
+        <div class="tier-spec"><span class="k">Disk</span><span class="v">250 GB SSD</span></div>
+        <div class="tier-spec"><span class="k">Network</span><span class="v">1 GbE</span></div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">Large</div>
+        <div class="tier-use">Enterprise · 250+ devices · multi-site</div>
+        <div class="tier-spec"><span class="k">RAM</span><span class="v">64 GB</span></div>
+        <div class="tier-spec"><span class="k">vCPU</span><span class="v">16 cores</span></div>
+        <div class="tier-spec"><span class="k">Disk</span><span class="v">500 GB NVMe</span></div>
+        <div class="tier-spec"><span class="k">Network</span><span class="v">2.5/10 GbE</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PART B — SERVER HOST PREREQS ========== -->
+  <div class="part-header">
+    <span class="part-label">Part B</span>
+    <span class="part-title">Server host prerequisites</span>
+    <span class="part-rule"></span>
+  </div>
+
+  <!-- §B.1 OS -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§B.1</span>
+      <span class="section-title">Operating system</span>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Windows · Docker Desktop / WSL2</div>
+      <ul class="check-list">
+        <li>Windows 11 22H2 or later <span class="hint">recommended</span></li>
+        <li>Windows Server 2022 <span class="hint">production deployments</span></li>
+        <li>Windows 10 build 19041+ <span class="hint">minimum — WSL2 requires this</span></li>
+      </ul>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Linux · Docker Engine</div>
+      <ul class="check-list">
+        <li>Ubuntu 24.04 LTS <span class="hint">recommended</span></li>
+        <li>Ubuntu 22.04 LTS <span class="hint">supported</span></li>
+        <li>x86_64 (amd64) architecture <span class="hint">required</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- §B.2 Virtualization  - CRITICAL (Windows) -->
+  <div class="section critical">
+    <div class="section-head">
+      <span class="section-num">§B.2</span>
+      <span class="section-title">BIOS / Firmware — virtualization</span>
+      <span class="section-tag">Critical</span>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Windows · required</div>
+      <div class="section-body">The installer cannot enable virtualization features. They must be turned on in firmware before it runs, otherwise WSL2 and Docker Desktop will fail to start.</div>
+      <ul class="check-list">
+        <li>Intel VT-x <em>or</em> AMD-V — enabled in BIOS/UEFI</li>
+        <li>SLAT / EPT / NPT support — required by Hyper-V</li>
+        <li>Hyper-V capable CPU <span class="hint">most CPUs from 2015+ qualify</span></li>
+      </ul>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Linux · not required</div>
+      <div class="section-body">Docker Engine runs natively on the Linux kernel — no WSL2, no Hyper-V, no BIOS/UEFI virtualization changes needed.</div>
+    </div>
+  </div>
+
+  <!-- §B.3 Ports -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§B.3</span>
+      <span class="section-title">Exposed ports</span>
+    </div>
+    <div class="section-body">The installer sets up an HTTPS front door (nginx) and publishes a single web port to the host — <strong>443 by default</strong>, configurable during install (set e.g. <code>8443</code> if 443 is already taken). Every other service — Postgres, NATS, Keycloak, Typesense, server, Monitor adapter — runs on the internal Docker network and is <strong>not</strong> exposed on the host, so no other ports need to be free. For live CCTV, WebRTC media additionally needs <code>8555</code> reachable from operator devices (RTSP 8554 stays internal).</div>
+    <div class="ports">
+      <span class="port">443</span>
+      <span class="port">8555</span>
+    </div>
+  </div>
+
+  <!-- §B.4 Host security / AV -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§B.4</span>
+      <span class="section-title">Host security &amp; anti-virus</span>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Windows · Microsoft Defender exclusions</div>
+      <div class="section-body">Real-time scanning of WSL2 virtual disks introduces significant I/O latency. Add the following paths as exclusions before installation.</div>
+      <pre class="code">%ProgramData%\Docker
+%ProgramData%\Pq
+%LOCALAPPDATA%\Docker
+%USERPROFILE%\AppData\Local\Docker\wsl
+<span class="cmt"># WSL2 vhdx files (replace &lt;Distro&gt; with installed distros)</span>
+%LOCALAPPDATA%\Packages\&lt;Distro&gt;\LocalState\ext4.vhdx</pre>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Linux · no exclusions needed</div>
+      <div class="section-body">No anti-virus exclusions are required. SELinux / AppArmor in their default enforcing profiles are compatible with Docker Engine — leave them enabled.</div>
+    </div>
+  </div>
+
+  <!-- §B.5 OS updates -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§B.5</span>
+      <span class="section-title">OS update policy</span>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Windows · Windows Update</div>
+      <ul class="check-list">
+        <li>Pause Windows Update for the duration of installation <span class="hint">prevents reboot mid-install</span></li>
+        <li>Plan a maintenance window for monthly cumulative updates <span class="hint">Protequ services restart automatically after host reboot</span></li>
+      </ul>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Linux · unattended-upgrades</div>
+      <ul class="check-list">
+        <li>Pause <code>unattended-upgrades</code> auto-reboot for the install <span class="hint">prevents reboot mid-install</span></li>
+        <li>Plan a maintenance window for kernel updates <span class="hint">containers use restart: unless-stopped and the docker service is enabled, so the stack returns after reboot</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- §B.6 Privileges -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§B.6</span>
+      <span class="section-title">Privileges &amp; container runtime</span>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Windows · Administrator</div>
+      <div class="section-body">The installer runs elevated. It enables Windows features (WSL, Virtual Machine Platform), installs Docker Desktop, writes to <code>%ProgramData%\Pq</code>, and sets ACLs on certificate stores.</div>
+    </div>
+    <div class="os-block">
+      <div class="os-label">Linux · root / sudo</div>
+      <div class="section-body">The installer runs as root (launched with <code>sudo</code>). It adds Docker's official apt repository, installs <code>docker-ce</code> + the compose plugin, enables the <code>docker</code> systemd service, writes the compose stack, and opens firewall ports via <code>ufw</code>.</div>
+    </div>
+  </div>
+
+  <!-- §B.7 Outbound (Linux online) -->
+  <div class="section critical">
+    <div class="section-head">
+      <span class="section-num">§B.7</span>
+      <span class="section-title">Network &amp; outbound access</span>
+      <span class="section-tag">Linux online</span>
+    </div>
+    <div class="section-body">The Linux installer is <em>online</em> — it cannot proceed without registry access. (The Windows installer ships an offline image bundle and needs no outbound access during install.)</div>
+    <ul class="check-list">
+      <li>Outbound HTTPS (443) to <code>repo.protequ.com</code> <span class="hint">pulls the installer, compose bundle, and all container images</span></li>
+      <li>Outbound HTTPS to <code>download.docker.com</code> <span class="hint">when Docker Engine must be installed</span></li>
+      <li>Inbound 443 + 8555 from operator devices <span class="hint">the installer opens these via ufw if active</span></li>
+    </ul>
+  </div>
+
+  <!-- ========== PART C — OPERATOR WORKSTATION ========== -->
+  <div class="part-header">
+    <span class="part-label">Part C</span>
+    <span class="part-title">Operator workstation</span>
+    <span class="part-rule"></span>
+  </div>
+
+  <!-- §C.1 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§C.1</span>
+      <span class="section-title">Hardware</span>
+    </div>
+    <ul class="check-list">
+      <li>8 GB RAM, 2 vCPU, 256 GB storage</li>
+      <li>Display ≥ 1920 × 1080 <span class="hint">dual monitor recommended for the Monitor app</span></li>
+    </ul>
+  </div>
+
+  <!-- §C.2 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§C.2</span>
+      <span class="section-title">OS and browser</span>
+    </div>
+    <ul class="check-list">
+      <li>Any current OS — Windows 10/11, macOS, or Linux</li>
+      <li>Microsoft Edge or Google Chrome — current stable version</li>
+    </ul>
+  </div>
+
+  <!-- §C.3 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§C.3</span>
+      <span class="section-title">Network reachability</span>
+    </div>
+    <div class="section-body">The workstation must reach the server on the front-door port — TCP <code>443</code> by default (or whatever port was chosen at install). For live CCTV also <code>8555</code> (WebRTC).</div>
+  </div>
+
+  <!-- §C.4 CA trust -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§C.4</span>
+      <span class="section-title">Trust the front-door certificate</span>
+    </div>
+    <div class="section-body">If the installer minted a self-signed CA (i.e. you did not supply your own certificate), browsers warn until each workstation trusts it once. Download <code>ca.crt</code> from the server, import it into the system / browser trust store, then restart the browser. In a domain, push the CA to all workstations via Group Policy. Skip if you supplied your own publicly-trusted certificate.</div>
+  </div>
+
+  <!-- ========== APPENDIX ========== -->
+  <div class="part-header">
+    <span class="part-label">Appendix</span>
+    <span class="part-title">Pre-flight validation</span>
+    <span class="part-rule"></span>
+  </div>
+
+  <!-- §D.1 PowerShell -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§D.1</span>
+      <span class="section-title">Windows — elevated PowerShell</span>
+    </div>
+    <div class="section-body">Verifies what the installer cannot fix automatically.</div>
+    <pre class="code"><span class="cmt"># Protequ Pre-flight check — run in elevated PowerShell</span>
+<span class="cmd">$os</span>    = <span class="cmd">Get-ComputerInfo</span> OsName, OsBuildNumber, HyperVRequirementVirtualizationFirmwareEnabled
+<span class="cmd">$ram</span>   = [math]::Round((<span class="cmd">Get-CimInstance</span> Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
+<span class="cmd">$disk</span>  = (<span class="cmd">Get-PSDrive</span> C).Free / 1GB
+<span class="cmd">$admin</span> = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(<span class="str">'Administrators'</span>)
+
+<span class="cmd">$ports</span> = 5432, 4222, 5443, 6443, 8108, 8443, 1984, 8554, 8555
+<span class="cmd">$busy</span>  = $ports | ? { (<span class="cmd">Test-NetConnection</span> -ComputerName localhost -Port $_ -WarningAction SilentlyContinue).TcpTestSucceeded }
+
+<span class="cmd">Write-Host</span> <span class="str">"OS Build .........."</span> $os.OsBuildNumber
+<span class="cmd">Write-Host</span> <span class="str">"VT-x enabled ......"</span> $os.HyperVRequirementVirtualizationFirmwareEnabled
+<span class="cmd">Write-Host</span> <span class="str">"RAM (GB) .........."</span> $ram
+<span class="cmd">Write-Host</span> <span class="str">"Free disk (GB) ...."</span> ([math]::Round($disk))
+<span class="cmd">Write-Host</span> <span class="str">"Administrator ....."</span> $admin
+<span class="cmd">Write-Host</span> <span class="str">"Ports in use ......"</span> ($busy -join <span class="str">', '</span>)</pre>
+  </div>
+
+  <!-- §D.2 bash -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§D.2</span>
+      <span class="section-title">Linux — bash</span>
+    </div>
+    <div class="section-body">Run on the Ubuntu host before installing.</div>
+    <pre class="code"><span class="cmt">#!/usr/bin/env bash</span>
+<span class="cmt"># Protequ Pre-flight check — run on the Ubuntu host</span>
+. /etc/os-release
+ram=$(($(grep MemTotal /proc/meminfo | awk '{print $2}') / 1024 / 1024))
+disk=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
+root=$([ "$(id -u)" -eq 0 ] &amp;&amp; echo yes || echo "no (use sudo)")
+ports="443 8555 5432 4222 5443 6443 8108 8443 1984 8554"
+busy=$(for p in $ports; do ss -ltn "sport = :$p" | grep -q LISTEN &amp;&amp; echo -n "$p "; done)
+
+echo "OS ..............." "$PRETTY_NAME ($(uname -m))"
+echo "RAM (GB) ........." "$ram"
+echo "Free disk (GB) ..." "$disk"
+echo "Root / sudo ......" "$root"
+echo "Docker ..........." "$(command -v docker &gt;/dev/null &amp;&amp; docker --version || echo 'not installed (installer adds it)')"
+echo "Ports in use ....." "${busy:-none}"</pre>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <span>Protequ — Physical Integration Management System</span>
+    <span>protequ.github.io/pq-web/setup/pq-host-prerequisites.html</span>
+  </footer>
+
+</div>
+</body>
+</html>
