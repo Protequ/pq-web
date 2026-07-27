@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -76,7 +76,7 @@ footer b{color:var(--text-secondary)}
     <div class="header-text">
       <div class="brand">Protequ</div>
       <div class="title">Scaling &amp; Capacity</div>
-      <div class="subtitle">Physical Integration Management System — kapacita &amp; škálovanie</div>
+      <div class="subtitle">Physical Integration Management System — capacity &amp; scaling</div>
     </div>
     <div class="meta-badges">
       <span class="badge">PERF BRIEF</span>
@@ -84,93 +84,93 @@ footer b{color:var(--text-secondary)}
     </div>
   </header>
 
-  <p class="lead">Koľko <b>aktívnych zariadení</b> (kamery, čítačky, vstupy, dvere — čokoľvek, čo generuje udalosti) Protequ unesie na jednotlivých konfiguráciách. Čísla sú dimenzované na absorpciu <b>reálnych špičiek</b>, nie len priemernej záťaže.</p>
+  <p class="lead">How many <b>active devices</b> (cameras, readers, inputs, doors — anything that generates events) Protequ handles on each configuration. Figures are sized to absorb <b>real-world bursts</b>, not just average load.</p>
 
   <div class="kpis">
-    <div class="kpi"><div class="v">~24 000</div><div class="k">aktívnych zariadení · 1 host (all-in-one, XLarge)</div></div>
-    <div class="kpi vi"><div class="v">~90 000</div><div class="k">aktívnych zariadení · 1 uzol so samostatným Postgresom (XLarge)</div></div>
-    <div class="kpi vi"><div class="v">~900 000<small> +</small></div><div class="k">naprieč 10-uzlovou federáciou · rastie pridaním uzlov</div></div>
-    <div class="kpi"><div class="v">~5 %</div><div class="k">využitie stroja pri reálnej špičke (1 000 zariadení)</div></div>
+    <div class="kpi"><div class="v">~24,000</div><div class="k">active devices · 1 host (all-in-one, XLarge)</div></div>
+    <div class="kpi vi"><div class="v">~90,000</div><div class="k">active devices · 1 node with separate Postgres (XLarge)</div></div>
+    <div class="kpi vi"><div class="v">~900,000<small> +</small></div><div class="k">across a 10-node federation · grows by adding nodes</div></div>
+    <div class="kpi"><div class="v">~5%</div><div class="k">machine utilization at a real-world peak (1,000 devices)</div></div>
   </div>
-  <p class="note">Pri reálnej prevádzkovej špičke je systém takmer nečinný — durable audit je paralelizovaný a bez straty udalostí. Priestor je tak pre <b>nárazové špičky</b> (ranná špička na dverách, alarm storm po výpadku), nie len priemer.</p>
+  <p class="note">At a real operating peak the system is near-idle — durable audit is parallelized with no event loss. That leaves headroom for <b>bursts</b> (morning door rush, alarm storm after an outage), not just the average.</p>
 
   <!-- Q1 + Q2 -->
-  <div class="part-header"><span class="part-label">Otázka 1 &amp; 2</span><span class="part-title">Koľko zvládne jeden uzol</span><span class="part-rule"></span></div>
-  <p class="psub">All-in-one Docker (všetko vrátane databázy na jednom hoste) vs. uzol so <b>samostatným Postgres clustrom</b> (odstráni jediné úzke hrdlo — zápis do DB).</p>
+  <div class="part-header"><span class="part-label">Questions 1 &amp; 2</span><span class="part-title">What one node handles</span><span class="part-rule"></span></div>
+  <p class="psub">All-in-one Docker (everything incl. the database on one host) vs. a node with a <b>separate Postgres cluster</b> (removes the one bottleneck — DB writes).</p>
   <div class="section">
     <div class="charts">
       <div>
-        <div class="leg"><span class="pill cy">all-in-one</span><span class="ax" style="font-size:12px">jeden host vrátane Postgresu</span></div>
+        <div class="leg"><span class="pill cy">all-in-one</span><span class="ax" style="font-size:12px">one host incl. Postgres</span></div>
         <svg viewBox="0 0 620 280" class="chart" xmlns="http://www.w3.org/2000/svg">
-          <text x="60" y="22" class="ct">All-in-one Docker — aktívne zariadenia</text>
+          <text x="60" y="22" class="ct">All-in-one Docker — active devices</text>
           <g class="grid"><line x1="70" y1="220" x2="600" y2="220"/><line x1="70" y1="175" x2="600" y2="175"/><line x1="70" y1="130" x2="600" y2="130"/><line x1="70" y1="85" x2="600" y2="85"/><line x1="70" y1="40" x2="600" y2="40"/></g>
           <g class="ax" text-anchor="end"><text x="64" y="224">0</text><text x="64" y="179">6k</text><text x="64" y="134">12k</text><text x="64" y="89">18k</text><text x="64" y="44">24k</text></g>
-          <rect x="101" y="197.5" width="70" height="22.5" rx="3" fill="#00b0f0"/><text x="136" y="191" class="lg" text-anchor="middle" fill="#fff">~3 000</text><text x="136" y="238" class="ax" text-anchor="middle">Small</text><text x="136" y="251" class="ax" text-anchor="middle">4c/16GB</text>
-          <rect x="234" y="182.5" width="70" height="37.5" rx="3" fill="#00b0f0"/><text x="269" y="176" class="lg" text-anchor="middle" fill="#fff">~5 000</text><text x="269" y="238" class="ax" text-anchor="middle">Medium</text><text x="269" y="251" class="ax" text-anchor="middle">8c/32GB</text>
-          <rect x="366" y="122.5" width="70" height="97.5" rx="3" fill="#00b0f0"/><text x="401" y="116" class="lg" text-anchor="middle" fill="#fff">~13 000</text><text x="401" y="238" class="ax" text-anchor="middle">Large</text><text x="401" y="251" class="ax" text-anchor="middle">16c/64GB</text>
-          <rect x="499" y="40" width="70" height="180" rx="3" fill="#00b0f0"/><text x="534" y="34" class="lg" text-anchor="middle" fill="#fff">~24 000</text><text x="534" y="238" class="ax" text-anchor="middle">XLarge</text><text x="534" y="251" class="ax" text-anchor="middle">32c/128GB</text>
+          <rect x="101" y="197.5" width="70" height="22.5" rx="3" fill="#00b0f0"/><text x="136" y="191" class="lg" text-anchor="middle" fill="#fff">~3,000</text><text x="136" y="238" class="ax" text-anchor="middle">Small</text><text x="136" y="251" class="ax" text-anchor="middle">4c/16GB</text>
+          <rect x="234" y="182.5" width="70" height="37.5" rx="3" fill="#00b0f0"/><text x="269" y="176" class="lg" text-anchor="middle" fill="#fff">~5,000</text><text x="269" y="238" class="ax" text-anchor="middle">Medium</text><text x="269" y="251" class="ax" text-anchor="middle">8c/32GB</text>
+          <rect x="366" y="122.5" width="70" height="97.5" rx="3" fill="#00b0f0"/><text x="401" y="116" class="lg" text-anchor="middle" fill="#fff">~13,000</text><text x="401" y="238" class="ax" text-anchor="middle">Large</text><text x="401" y="251" class="ax" text-anchor="middle">16c/64GB</text>
+          <rect x="499" y="40" width="70" height="180" rx="3" fill="#00b0f0"/><text x="534" y="34" class="lg" text-anchor="middle" fill="#fff">~24,000</text><text x="534" y="238" class="ax" text-anchor="middle">XLarge</text><text x="534" y="251" class="ax" text-anchor="middle">32c/128GB</text>
         </svg>
       </div>
       <div>
-        <div class="leg"><span class="pill vi">samostatný Postgres</span><span class="ax" style="font-size:12px">DB na vlastnom clustri</span></div>
+        <div class="leg"><span class="pill vi">separate Postgres</span><span class="ax" style="font-size:12px">DB on its own cluster</span></div>
         <svg viewBox="0 0 620 280" class="chart" xmlns="http://www.w3.org/2000/svg">
-          <text x="60" y="22" class="ct">Samostatný Postgres — aktívne zariadenia</text>
+          <text x="60" y="22" class="ct">Separate Postgres — active devices</text>
           <g class="grid"><line x1="70" y1="220" x2="600" y2="220"/><line x1="70" y1="175" x2="600" y2="175"/><line x1="70" y1="130" x2="600" y2="130"/><line x1="70" y1="85" x2="600" y2="85"/><line x1="70" y1="40" x2="600" y2="40"/></g>
           <g class="ax" text-anchor="end"><text x="64" y="224">0</text><text x="64" y="179">22.5k</text><text x="64" y="134">45k</text><text x="64" y="89">67.5k</text><text x="64" y="44">90k</text></g>
-          <rect x="101" y="206" width="70" height="14" rx="3" fill="#7c6bff"/><text x="136" y="199" class="lg" text-anchor="middle" fill="#fff">~7 000</text><text x="136" y="238" class="ax" text-anchor="middle">Small</text>
-          <rect x="234" y="188" width="70" height="32" rx="3" fill="#7c6bff"/><text x="269" y="181" class="lg" text-anchor="middle" fill="#fff">~16 000</text><text x="269" y="238" class="ax" text-anchor="middle">Medium</text>
-          <rect x="366" y="150" width="70" height="70" rx="3" fill="#7c6bff"/><text x="401" y="143" class="lg" text-anchor="middle" fill="#fff">~35 000</text><text x="401" y="238" class="ax" text-anchor="middle">Large</text>
-          <rect x="499" y="40" width="70" height="180" rx="3" fill="#7c6bff"/><text x="534" y="34" class="lg" text-anchor="middle" fill="#fff">~90 000</text><text x="534" y="238" class="ax" text-anchor="middle">XLarge</text>
+          <rect x="101" y="206" width="70" height="14" rx="3" fill="#7c6bff"/><text x="136" y="199" class="lg" text-anchor="middle" fill="#fff">~7,000</text><text x="136" y="238" class="ax" text-anchor="middle">Small</text>
+          <rect x="234" y="188" width="70" height="32" rx="3" fill="#7c6bff"/><text x="269" y="181" class="lg" text-anchor="middle" fill="#fff">~16,000</text><text x="269" y="238" class="ax" text-anchor="middle">Medium</text>
+          <rect x="366" y="150" width="70" height="70" rx="3" fill="#7c6bff"/><text x="401" y="143" class="lg" text-anchor="middle" fill="#fff">~35,000</text><text x="401" y="238" class="ax" text-anchor="middle">Large</text>
+          <rect x="499" y="40" width="70" height="180" rx="3" fill="#7c6bff"/><text x="534" y="34" class="lg" text-anchor="middle" fill="#fff">~90,000</text><text x="534" y="238" class="ax" text-anchor="middle">XLarge</text>
         </svg>
       </div>
     </div>
     <table>
-      <thead><tr><th>Konfigurácia</th><th>Small · 4c/16GB</th><th>Medium · 8c/32GB</th><th>Large · 16c/64GB</th><th>XLarge · 32c/128GB</th></tr></thead>
+      <thead><tr><th>Configuration</th><th>Small · 4c/16GB</th><th>Medium · 8c/32GB</th><th>Large · 16c/64GB</th><th>XLarge · 32c/128GB</th></tr></thead>
       <tbody>
-        <tr><td><span class="pill cy">all-in-one</span></td><td class="big">~3 000</td><td class="big">~5 000</td><td class="big">~13 000</td><td class="big">~24 000</td></tr>
-        <tr><td><span class="pill vi">samostatný Postgres</span></td><td class="big">~7 000</td><td class="big">~16 000</td><td class="big">~35 000</td><td class="big">~90 000</td></tr>
+        <tr><td><span class="pill cy">all-in-one</span></td><td class="big">~3,000</td><td class="big">~5,000</td><td class="big">~13,000</td><td class="big">~24,000</td></tr>
+        <tr><td><span class="pill vi">separate Postgres</span></td><td class="big">~7,000</td><td class="big">~16,000</td><td class="big">~35,000</td><td class="big">~90,000</td></tr>
       </tbody>
     </table>
-    <p class="note">Samostatný Postgres cluster odstraňuje jediné namerané úzke hrdlo (zápis auditu) a uvoľní hostu CPU/RAM → <b>2–4× vyššia kapacita</b> na tej istej triede stroja. Odporúčaný pre Large a väčšie / multi-site.</p>
+    <p class="note">A separate Postgres cluster removes the one measured bottleneck (audit writes) and frees host CPU/RAM → <b>2–4× higher capacity</b> on the same machine class. Recommended for Large and above / multi-site.</p>
   </div>
 
   <!-- Q3 -->
-  <div class="part-header"><span class="part-label">Otázka 3</span><span class="part-title">Enterprise federácia (hniezda)</span><span class="part-rule"></span></div>
-  <p class="psub">Autonómne hniezda synchronizujú do centrálneho <b>Mastera</b> (automaticky najsilnejší uzol) <b>dávkovo, mimo špičky</b>. Master nie je úzke hrdlo — nočný sync je bulk load. Hniezda (slaves) dimenzujeme podľa potreby.</p>
+  <div class="part-header"><span class="part-label">Question 3</span><span class="part-title">Enterprise federation (nests)</span><span class="part-rule"></span></div>
+  <p class="psub">Autonomous nests sync to a central <b>Master</b> (automatically the strongest node) in <b>batches, off-peak</b>. The Master is not a bottleneck — the nightly sync is a bulk load. Nests (slaves) are sized as needed.</p>
   <div class="section">
     <div class="charts">
       <div>
         <svg viewBox="0 0 620 300" class="chart" xmlns="http://www.w3.org/2000/svg">
           <defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00b0f0"/><stop offset="1" stop-color="#7c6bff"/></linearGradient></defs>
-          <text x="60" y="22" class="ct">Federácia — aktívne zariadenia rastú lineárne</text>
+          <text x="60" y="22" class="ct">Federation — active devices grow linearly</text>
           <g class="grid"><line x1="70" y1="230" x2="590" y2="230"/><line x1="70" y1="182.5" x2="590" y2="182.5"/><line x1="70" y1="135" x2="590" y2="135"/><line x1="70" y1="87.5" x2="590" y2="87.5"/><line x1="70" y1="40" x2="590" y2="40"/></g>
           <g class="ax" text-anchor="end"><text x="64" y="234">0</text><text x="64" y="187">250k</text><text x="64" y="139">500k</text><text x="64" y="92">750k</text><text x="64" y="44">1M</text></g>
           <polyline points="110,212.9 320,144.5 530,58.8" fill="none" stroke="url(#cv)" stroke-width="3"/>
-          <circle cx="110" cy="212.9" r="5" fill="#00b0f0"/><text x="110" y="204" class="lg" text-anchor="middle" fill="#fff">~90k</text><text x="110" y="250" class="ax" text-anchor="middle">1 hniezdo</text>
-          <circle cx="320" cy="144.5" r="5" fill="#5b8ff5"/><text x="320" y="136" class="lg" text-anchor="middle" fill="#fff">~450k</text><text x="320" y="250" class="ax" text-anchor="middle">5 hniezd</text>
-          <circle cx="530" cy="58.8" r="5" fill="#7c6bff"/><text x="530" y="50" class="lg" text-anchor="middle" fill="#fff">~900k</text><text x="530" y="250" class="ax" text-anchor="middle">10 hniezd</text>
-          <text x="556" y="86" class="axl" fill="#c3b8ff">→ pridaj hniezda</text>
-          <text x="330" y="278" class="ax" text-anchor="middle">každé hniezdo (XLarge + samostatný Postgres) ~90 000 · Master = najsilnejší uzol, dávkový sync</text>
+          <circle cx="110" cy="212.9" r="5" fill="#00b0f0"/><text x="110" y="204" class="lg" text-anchor="middle" fill="#fff">~90k</text><text x="110" y="250" class="ax" text-anchor="middle">1 nest</text>
+          <circle cx="320" cy="144.5" r="5" fill="#5b8ff5"/><text x="320" y="136" class="lg" text-anchor="middle" fill="#fff">~450k</text><text x="320" y="250" class="ax" text-anchor="middle">5 nests</text>
+          <circle cx="530" cy="58.8" r="5" fill="#7c6bff"/><text x="530" y="50" class="lg" text-anchor="middle" fill="#fff">~900k</text><text x="530" y="250" class="ax" text-anchor="middle">10 nests</text>
+          <text x="556" y="86" class="axl" fill="#c3b8ff">→ add nests</text>
+          <text x="330" y="278" class="ax" text-anchor="middle">each nest (XLarge + separate Postgres) ~90,000 · Master = strongest node, batch sync</text>
         </svg>
       </div>
       <div>
         <table>
-          <thead><tr><th>Vrstva</th><th>Kapacita</th></tr></thead>
+          <thead><tr><th>Tier</th><th>Capacity</th></tr></thead>
           <tbody>
-            <tr><td>1 hniezdo (XLarge)</td><td class="big">~90 000</td></tr>
-            <tr><td>Federácia ×5</td><td class="big">~450 000</td></tr>
-            <tr><td>Federácia ×10</td><td class="big">~900 000</td></tr>
-            <tr><td>Ďalšie hniezda</td><td class="big">lineárne, prakticky bez stropu</td></tr>
-            <tr><td>Master (najsilnejší uzol)</td><td>nočný bulk sync — <b>nie úzke hrdlo</b></td></tr>
+            <tr><td>1 nest (XLarge)</td><td class="big">~90,000</td></tr>
+            <tr><td>Federation ×5</td><td class="big">~450,000</td></tr>
+            <tr><td>Federation ×10</td><td class="big">~900,000</td></tr>
+            <tr><td>More nests</td><td class="big">linear, effectively no ceiling</td></tr>
+            <tr><td>Master (strongest node)</td><td>nightly bulk sync — <b>not a bottleneck</b></td></tr>
           </tbody>
         </table>
-        <p class="note">Každé hniezdo je <b>autonómne</b> (funguje aj bez spojenia na Master). Master centralizuje archív, globálne vyhľadávanie a reporting; udalosti sa doňho synchronizujú <b>dávkovo a filtrovane mimo špičky</b> (bulk load ~100k záznamov/s). Slaves škálujeme podľa veľkosti sitov, Master ostáva top-tier.</p>
+        <p class="note">Each nest is <b>autonomous</b> (works even without a link to the Master). The Master centralizes the archive, global search and reporting; events sync to it in <b>filtered batches off-peak</b> (bulk load ~100k rows/s). Slaves scale with site size, the Master stays top-tier.</p>
       </div>
     </div>
   </div>
 
   <footer>
-    <b>Základ čísel.</b> Indikatívne kapacity z výkonnostného testovania a modelovania event/audit pipeline (paralelizovaný durable zápis, meraný na referenčnom stroji, extrapolovaný na deklarované HW triedy). Kapacity sú dimenzované na dodrénovanie <b>nárazovej špičky</b> do cieľovej latencie, nie na priemernú záťaž. Skutočný počet v konkrétnom nasadení závisí od profilu zariadení a frekvencie udalostí — <b>finálny sizing potvrdzujeme per projekt</b>. Triedy Small / Medium / Large = deklarované HW tiery (4 / 8 / 16 vCPU); XLarge (32 vCPU) = optimalizovaná trieda pre veľké nasadenia.
+    <b>Basis of the figures.</b> Indicative capacities from performance testing and modeling of the event/audit pipeline (parallelized durable writes, measured on a reference machine, extrapolated to the declared HW classes). Capacities are sized to drain a worst-case <b>burst</b> within a target latency, not to carry the average. The real number in a given deployment depends on device profile and event frequency — <b>final sizing is confirmed per project</b>. Small / Medium / Large = declared HW tiers (4 / 8 / 16 vCPU); XLarge (32 vCPU) = an optimized class for large deployments.
   </footer>
 
 </div>
