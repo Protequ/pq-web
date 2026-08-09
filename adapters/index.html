@@ -487,10 +487,11 @@
       cctv:      { title: 'Video Surveillance',  desc: 'NVRs and IP cameras. Live & playback streaming, PTZ, motion and analytics.',  icon: 'video' },
       intrusion: { title: 'Intrusion Detection', desc: 'Alarm panels, partitions, zones and outputs. Arm / disarm, bypass, event logs.', icon: 'intrusion' },
       access:    { title: 'Access Control',      desc: 'Controllers, readers and biometric terminals. Card, PIN, face and OSDP.',     icon: 'access' },
+      fire:      { title: 'Fire Alarm',          desc: 'Fire alarm control panels (EPS). Zones, detectors, panel commands and outputs.', icon: 'module' },
       module:    { title: 'Modules & Services',  desc: 'Operational modules — monitoring, visualization and platform services.',       icon: 'module' },
       security:  { title: 'Security',            desc: 'General security integrations and software adapters.',                          icon: 'demo' },
     };
-    const categoryOrder = ['cctv', 'intrusion', 'access', 'module', 'security'];
+    const categoryOrder = ['cctv', 'intrusion', 'access', 'fire', 'module', 'security'];
 
     // Build the ordered list of categories that actually have adapters.
     const categories = (() => {
@@ -506,16 +507,19 @@
     })();
 
     const capLabels = {
-      timeSync:    { label: 'Time sync',         icon: 'sync' },
-      rtsp:        { label: 'RTSP streaming',    icon: 'check' },
-      ptz:         { label: 'PTZ',               icon: 'check' },
-      firmware:    { label: 'Firmware update',   icon: 'firmware' },
-      partitions:  { label: 'Partitions',        icon: 'check' },
-      outputs:     { label: 'Relay outputs',     icon: 'check' },
-      access:      { label: 'Access control',    icon: 'check' },
-      biometric:   { label: 'Biometric',         icon: 'check' },
-      osdp:        { label: 'OSDP',              icon: 'check' },
-      analytics:   { label: 'Analytics',         icon: 'check' },
+      timeSync:      { label: 'Time sync',         icon: 'sync' },
+      rtsp:          { label: 'RTSP streaming',    icon: 'check' },
+      ptz:           { label: 'PTZ',               icon: 'check' },
+      firmware:      { label: 'Firmware update',   icon: 'firmware' },
+      partitions:    { label: 'Partitions',        icon: 'check' },
+      outputs:       { label: 'Relay outputs',     icon: 'check' },
+      access:        { label: 'Access control',    icon: 'check' },
+      biometric:     { label: 'Biometric',         icon: 'check' },
+      osdp:          { label: 'OSDP',              icon: 'check' },
+      analytics:     { label: 'Analytics',         icon: 'check' },
+      'fire-panel':  { label: 'Fire panel',        icon: 'check' },
+      'fire-points': { label: 'Fire points',       icon: 'check' },
+      'event-history': { label: 'Event history',   icon: 'check' },
     };
 
     const catIcon = key => icons[categoryMeta[key]?.icon || 'module'] || '';
