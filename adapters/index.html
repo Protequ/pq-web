@@ -333,6 +333,19 @@
       border-radius: 999px;
       white-space: nowrap;
     }
+    .badge-in-dev {
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--warn);
+      background: rgba(249, 168, 37, 0.10);
+      border: 1px solid rgba(249, 168, 37, 0.32);
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
 
     .card-desc {
       font-size: 13.5px;
@@ -476,7 +489,7 @@
       { id: 'pqlitesmhu', category: 'fire', name: 'LITES MHU116/117', vendor: 'LITES Liberec', description: 'In development. LITES MHU116/MHU117 fire alarm control panel (EPS) — native protocol v1.13.', capabilities: ['fire-panel', 'fire-points', 'event-history'] },
       { id: 'pqmonitor', category: 'module', name: 'Monitoring & Visualization', vendor: 'Protequ', description: 'Centralized monitoring and visualization dashboard for PQ', capabilities: [] },
       { id: 'pqparadox', category: 'intrusion', name: 'Paradox EVO', vendor: 'Paradox Security', description: 'EVO48 / EVO64 / EVO192 panels via IP150 module — AES-128 encrypted TCP, buffered event log, partitions, zones, PGM outputs and bus modules.', capabilities: ['timeSync', 'partitions', 'outputs'] },
-      { id: 'pqschrack', category: 'fire', name: 'Schrack Integral ISP-IP', vendor: 'Schrack Seconet', description: 'Schrack Seconet Integral IP fire panels via native ISP-IP — live zone & detector states, panel reset/mute, day/night and intervention windows, acoustic outputs.', capabilities: ['fire-panel', 'fire-points', 'outputs'] },
+      { id: 'pqschrack', category: 'fire', name: 'Schrack Integral ISP-IP', vendor: 'Schrack Seconet', description: 'Schrack Seconet Integral (IP) fire alarm control panel (EPS) — native ISP-IP protocol v4.1.1 over TCP.', capabilities: ['outputs'] },
       { id: 'pqsuprema', category: 'access', name: 'Suprema BioStation 3', vendor: 'Suprema', description: 'BioStation 3 face + card terminals via the Suprema G-SDK gateway — biometric enrollment, door I/O, schedules and historical event recovery.', capabilities: ['timeSync', 'biometric', 'access'] },
       { id: 'pqtechfass', category: 'access', name: 'TECH FASS APS mini Plus', vendor: 'TECH FASS s.r.o.', description: 'APS mini Plus controllers over an RS485-to-TCP gateway — card and PIN readers, logical doors, relay outputs and archived access events.', capabilities: ['access', 'outputs'] },
     ];
@@ -551,6 +564,7 @@
               <h3>${escapeHtml(a.name)}</h3>
             </div>
             ${a.prerelease ? '<span class="badge-prerelease">Pre-release</span>' : ''}
+            ${a.inDevelopment ? '<span class="badge-in-dev">In development</span>' : ''}
             ${a.demo ? '<span class="badge-demo">Demo</span>' : ''}
           </div>
           <p class="card-desc">${escapeHtml(a.description)}</p>
@@ -571,6 +585,7 @@
         ...(a.capabilities || []).map(c => (capLabels[c]?.label || c)),
         a.demo ? 'demo simulator' : '',
         a.prerelease ? 'prerelease pre-release beta rc' : '',
+        a.inDevelopment ? 'in development developing wip' : '',
         a.category,
       ].join(' ').toLowerCase();
       // Multi-word AND search
@@ -627,9 +642,11 @@
       const total = adapters.length;
       const demo = adapters.filter(a => a.demo).length;
       const pre  = adapters.filter(a => a.prerelease).length;
+      const inDev = adapters.filter(a => a.inDevelopment).length;
       document.getElementById('meta-total').textContent = total;
-      const parts = [`${total - demo - pre} production`];
+      const parts = [`${total - demo - pre - inDev} production`];
       if (demo) parts.push(`${demo} demo`);
+      if (inDev) parts.push(`${inDev} in development`);
       if (pre)  parts.push(`${pre} pre-release`);
       document.getElementById('meta-split').textContent = parts.join(' · ');
     }
