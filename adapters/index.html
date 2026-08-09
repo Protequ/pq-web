@@ -463,7 +463,7 @@
     // registry by .github/scripts/build-adapters-page.mjs at build time.
     // Each adapter's `category` is the org.protequ.category OCI label.
     const adapters = [
-      { id: 'pqdominus', category: 'intrusion', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
+{ id: 'pqdominus', category: 'intrusion', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
       { id: 'pqademco', category: 'intrusion', name: 'Ademco Galaxy Smart', vendor: 'Honeywell Ademco', description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.', capabilities: ['timeSync', 'partitions', 'access'] },
       { id: 'pqcctvsim', category: 'cctv', name: 'CCTV Simulator', vendor: 'Protequ', demo: true, description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.', capabilities: ['ptz', 'analytics'] },
       { id: 'pqdahua', category: 'cctv', name: 'Dahua CCTV/NVR', vendor: 'Dahua Technology', description: 'NVRs and PoE cameras via Dahua HTTP CGI v3.98 — Digest auth, live RTSP, playback, PTZ, snapshots and alarm outputs.', capabilities: ['timeSync', 'rtsp', 'ptz'] },
@@ -488,9 +488,10 @@
       intrusion: { title: 'Intrusion Detection', desc: 'Alarm panels, partitions, zones and outputs. Arm / disarm, bypass, event logs.', icon: 'intrusion' },
       access:    { title: 'Access Control',      desc: 'Controllers, readers and biometric terminals. Card, PIN, face and OSDP.',     icon: 'access' },
       module:    { title: 'Modules & Services',  desc: 'Operational modules — monitoring, visualization and platform services.',       icon: 'module' },
+      fire:      { title: 'Fire Detection',      desc: 'Fire alarm control panels (EPS), detectors, sounders and fire point commands.', icon: 'intrusion' },
       security:  { title: 'Security',            desc: 'General security integrations and software adapters.',                          icon: 'demo' },
     };
-    const categoryOrder = ['cctv', 'intrusion', 'access', 'module', 'security'];
+    const categoryOrder = ['cctv', 'intrusion', 'fire', 'access', 'module', 'security'];
 
     // Build the ordered list of categories that actually have adapters.
     const categories = (() => {
@@ -516,6 +517,9 @@
       biometric:   { label: 'Biometric',         icon: 'check' },
       osdp:        { label: 'OSDP',              icon: 'check' },
       analytics:   { label: 'Analytics',         icon: 'check' },
+      'fire-panel': { label: 'Fire panel',       icon: 'check' },
+      'fire-points':{ label: 'Fire points',      icon: 'check' },
+      'event-history':{ label: 'Event history',  icon: 'check' },
     };
 
     const catIcon = key => icons[categoryMeta[key]?.icon || 'module'] || '';
