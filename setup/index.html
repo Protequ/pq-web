@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protequ — Setup &amp; Documentation</title>
+<style>
+:root{
+  --bg-primary:#1a1a2e; --bg-secondary:#16213e; --bg-surface:#1e2a45; --bg-input:#0f1629;
+  --text-primary:#e0e0e0; --text-secondary:#8892a4; --text-muted:#5a6478;
+  --accent:#00b0f0; --accent-hover:#33c4ff; --violet:#7c6bff;
+  --border:#2a3550; --border-light:#354265;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg-primary);color:var(--text-primary);
+  font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.55;font-size:14px}
+.page{max-width:1040px;margin:0 auto;padding:40px 32px 64px}
+.header{display:flex;align-items:center;gap:20px;padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.logo-glow{width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:pq-glow 2.5s ease-in-out infinite;overflow:hidden}
+.logo-glow svg{width:56px;height:56px;border-radius:50%;display:block}
+@keyframes pq-glow{0%,100%{box-shadow:0 0 10px 3px rgba(0,176,240,.45)}50%{box-shadow:0 0 20px 8px rgba(0,176,240,.85)}}
+.header-text{flex:1}
+.brand{font-size:12px;letter-spacing:4px;color:var(--accent);font-weight:600;text-transform:uppercase}
+.title{font-size:26px;font-weight:300;color:var(--text-primary);letter-spacing:1.5px;margin-top:4px}
+.subtitle{color:var(--text-secondary);font-size:13px;margin-top:4px}
+.meta-badges{display:flex;gap:8px;align-items:center}
+.badge{font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);font-family:'Consolas',monospace}
+.lead{color:var(--text-secondary);font-size:15px;margin:20px 0 4px;max-width:820px}
+.lead b{color:var(--text-primary)}
+.part-header{margin:38px 0 16px;display:flex;align-items:baseline;gap:12px}
+.part-label{font-size:10px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;font-weight:600;white-space:nowrap}
+.part-title{font-size:20px;font-weight:300;letter-spacing:1px}
+.part-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+a.card{display:block;text-decoration:none;color:inherit;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .15s,transform .15s}
+a.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+a.card.vi::before{background:var(--violet)}
+a.card:hover{border-color:var(--border-light);transform:translateY(-1px)}
+a.card:hover .ct{color:var(--accent-hover)}
+.ct{font-size:16px;font-weight:600;color:#fff;transition:color .15s}
+.cd{color:var(--text-secondary);font-size:13px;margin-top:6px}
+.cm{color:var(--text-muted);font-size:11px;margin-top:10px;font-family:'Consolas',monospace}
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12.5px}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+@media(max-width:860px){.cards{grid-template-columns:1fr}.page{padding:28px 18px 48px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="logo-glow"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Protequ"><g transform="translate(0,1024) scale(0.1,-0.1)" fill="#000000" stroke="none"><path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0 -5120z m7320 1715 c259 -32 531 -95 848 -197 l193 -62 -4 -721 c-3 -624 -6 -733 -21 -815 -52 -290 -136 -491 -306 -733 -77 -110 -351 -388 -490 -498 -108 -86 -259 -193 -264 -188 -71 84 -207 251 -204 253 43 25 260 199 339 273 296 275 447 485 534 746 66 198 67 212 72 848 l4 576 -178 51 c-345 100 -656 150 -878 139 -120 -6 -330 -42 -414 -72 -24 -8 -47 -15 -51 -15 -4 0 -52 37 -106 81 -55 45 -116 93 -136 108 -21 14 -38 29 -38 33 0 14 146 93 230 124 88 34 246 68 385 84 103 11 326 5 485 -15z m-1745 -145 c297 -28 532 -127 743 -313 372 -327 538 -866 442 -1432 -30 -177 -108 -388 -191 -517 -19 -29 -28 -52 -23 -60 5 -7 139 -194 300 -414 160 -221 294 -406 297 -411 4 -6 -26 -27 -66 -48 l-73 -38 -134 73 c-277 150 -429 258 -577 407 l-102 104 -88 -53 c-147 -89 -310 -145 -491 -169 -110 -15 -352 -7 -450 15 -230 50 -482 184 -619 327 -124 131 -260 354 -321 529 -147 421 -117 912 80 1304 59 117 104 186 181 274 270 310 664 462 1092 422z m-2450 -30 c298 -34 535 -168 685 -385 48 -70 108 -202 131 -290 47 -180 34 -431 -32 -623 -91 -270 -314 -468 -618 -550 -94 -25 -105 -26 -478 -30 l-383 -4 0 -464 0 -464 -273 0 c-199 0 -276 3 -285 12 -9 9 -12 335 -12 1403 0 766 3 1395 7 1398 11 11 1159 8 1258 -3z"/><path d="M5281 6155 c-143 -33 -289 -133 -386 -265 -207 -282 -255 -785 -106 -1114 63 -140 207 -300 328 -364 182 -96 457 -97 648 -2 33 17 68 37 79 44 18 14 17 16 -5 48 -13 18 -114 160 -226 315 -112 155 -203 285 -203 288 0 3 130 5 289 5 l289 0 83 -120 c46 -66 86 -120 89 -120 12 0 51 175 62 280 22 206 -15 420 -101 595 -104 209 -262 345 -466 401 -84 22 -292 27 -374 9z"/><path d="M2430 5719 l0 -424 322 6 c336 7 371 11 464 55 124 58 193 208 181 394 -7 122 -35 191 -106 261 -103 101 -180 118 -578 126 l-283 6 0 -424z"/></g></svg></div>
+    <div class="header-text">
+      <div class="brand">Protequ</div>
+      <div class="title">Setup &amp; Documentation</div>
+      <div class="subtitle">Physical Integration Management System — installation guides, capacity &amp; sizing</div>
+    </div>
+    <div class="meta-badges">
+      <span class="badge">INDEX</span>
+    </div>
+  </header>
+
+  <p class="lead">Guides for getting Protequ installed and sized. Start with the <b>pre-installation checklist</b>, follow the quick guide for your operating system, then use the capacity documents to pick the right hardware.</p>
+
+  <div class="part-header"><span class="part-label">Install</span><span class="part-title">Getting Protequ running</span><span class="part-rule"></span></div>
+  <div class="cards">
+    <a class="card" href="pq-host-prerequisites.html">
+      <div class="ct">Pre-Installation Checklist</div>
+      <div class="cd">Hardware and OS prerequisites for IT administrators — Windows &amp; Linux. Read this before you install anything.</div>
+      <div class="cm">pq-host-prerequisites.html</div>
+    </a>
+    <a class="card" href="quick-guide.html">
+      <div class="ct">Online Setup Quick Guide</div>
+      <div class="cd">Getting the platform running on Windows — the standard installer walkthrough, end to end.</div>
+      <div class="cm">quick-guide.html</div>
+    </a>
+    <a class="card" href="quick-guide-linux.html">
+      <div class="ct">Linux Setup Quick Guide</div>
+      <div class="cd">The same walkthrough for Linux hosts, using the tarball installer.</div>
+      <div class="cm">quick-guide-linux.html</div>
+    </a>
+    <a class="card" href="quick-guide-rhel.html">
+      <div class="ct">RHEL 9 — differences from Ubuntu</div>
+      <div class="cd">Delta guide: what changes when you run the installer on RHEL 9 rather than Ubuntu.</div>
+      <div class="cm">quick-guide-rhel.html</div>
+    </a>
+  </div>
+
+  <div class="part-header"><span class="part-label">Capacity</span><span class="part-title">Sizing &amp; performance</span><span class="part-rule"></span></div>
+  <div class="cards">
+    <a class="card vi" href="pq-scaling-capacity.html">
+      <div class="ct">Scaling &amp; Capacity</div>
+      <div class="cd">How many active devices each configuration handles — all-in-one, with a separate Postgres, and across a federation. The short answer, in numbers.</div>
+      <div class="cm">pq-scaling-capacity.html</div>
+    </a>
+    <a class="card vi" href="pq-sizing-projection.html">
+      <div class="ct">Performance Analysis &amp; Sizing Projection</div>
+      <div class="cd">The measurements behind those numbers: measured throughput, why sizing is done against bursts rather than averages, and the vertical, horizontal and federated scaling paths.</div>
+      <div class="cm">pq-sizing-projection.html</div>
+    </a>
+  </div>
+
+  <div class="part-header"><span class="part-label">Elsewhere</span><span class="part-title">Other sections</span><span class="part-rule"></span></div>
+  <div class="cards">
+    <a class="card" href="../adapters/">
+      <div class="ct">Adapters &amp; Integrations</div>
+      <div class="cd">The catalog of available adapters, generated from the published images.</div>
+      <div class="cm">/adapters/</div>
+    </a>
+    <a class="card" href="../development/">
+      <div class="ct">Enable Local Adapter Development</div>
+      <div class="cd">Pointing a locally built adapter at an installed Protequ instance.</div>
+      <div class="cm">/development/</div>
+    </a>
+  </div>
+
+  <footer>
+    <b>Protequ</b> — Physical Integration Management System · <a href="https://www.protequ.com">protequ.com</a> · <a href="mailto:info@protequ.com">info@protequ.com</a>
+  </footer>
+
+</div>
+</body>
+</html>
