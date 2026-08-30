@@ -375,16 +375,16 @@
 
       <h1>Running the installer on <span class="accent">RHEL 9</span></h1>
       <p class="lead">
-        The installer targets Ubuntu, and everything in the
-        <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a> applies unchanged —
-        except for four things it cannot provision on RHEL. Install those first, then follow
-        that guide exactly as written.
+        The installer targets Ubuntu. On RHEL it stops twice — at <em>Docker Engine</em> and at
+        <em>Host wiring</em> — because it cannot provision what it needs there. Install the
+        packages below first, then follow the
+        <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a>.
       </p>
 
       <div class="hero-meta">
         <span><span class="dot"></span>2 commands · then unchanged</span>
-        <span>RHEL 9 · Rocky Linux 9 · AlmaLinux 9</span>
         <span>verified on Rocky Linux 9.8</span>
+        <span>PQ installer v1.6.3</span>
       </div>
     </section>
 
@@ -394,26 +394,26 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg>
         What RHEL needs that Ubuntu has
       </h2>
-      <p class="sub">None of these ship in the RHEL 9 <strong>Minimal Install</strong> (package group <code>@core</code>). The first two stop the installer outright.</p>
+      <p class="sub">None of these ship in the RHEL 9 <strong>Minimal Install</strong> (package group <code>@core</code>).</p>
 
       <table class="spec">
-        <thead><tr><th>What</th><th>Why it is needed · what happens without it</th></tr></thead>
+        <thead><tr><th>What</th><th>Why it is needed</th></tr></thead>
         <tbody>
           <tr>
             <td>Docker Engine<br>+ compose plugin</td>
-            <td>The installer provisions Docker through <code>apt</code>, which RHEL has no equivalent of in its code path.<br><span class="hl">Aborts at <em>Docker Engine</em></span> — <code>apt-get: command not found</code></td>
+            <td>The installer provisions Docker through <code>apt</code>.<br><span class="hl">Observed:</span> aborts at <em>Docker Engine</em> with <code>apt-get: command not found</code></td>
           </tr>
           <tr>
             <td><code>perl</code></td>
-            <td><code>configure-host.sh</code> rewrites the certificate SAN, the go2rtc ICE candidates and the Keycloak realm allowlist.<br><span class="hl">Aborts at <em>Host wiring</em></span> — <code>perl: command not found</code></td>
+            <td><code>configure-host.sh</code> uses it to rewrite the certificate SAN, the go2rtc ICE candidates and the Keycloak realm allowlist.<br><span class="hl">Observed:</span> aborts at <em>Host wiring</em> with <code>perl: command not found</code></td>
           </tr>
           <tr>
             <td><code>openssl</code></td>
-            <td>Mints the root CA and the service certificates — host wiring fails without it.</td>
+            <td>Required by <code>generate-certificates.sh</code>, which mints the root CA and the service certificates.</td>
           </tr>
           <tr>
             <td><code>tar</code>, <code>gzip</code></td>
-            <td><code>run.sh</code> unpacks the compose bundle — the installer refuses to start.</td>
+            <td><code>run.sh</code> checks for <code>tar</code> and exits without it; the compose bundle is a <code>.tar.gz</code>.</td>
           </tr>
         </tbody>
       </table>
@@ -425,7 +425,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
         Before you run the installer
       </h2>
-      <p class="sub">Three steps. After them, the Linux quick guide applies verbatim.</p>
+      <p class="sub">Three steps. After them, the Linux quick guide applies.</p>
 
       <div class="steps">
 
@@ -448,13 +448,7 @@
 sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
 sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo systemctl enable --now docker</code></div>
-            <div class="callout">
-              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
-              <div class="body">
-                <p><strong>Rocky Linux / AlmaLinux.</strong></p>
-                <p>Either repository works — substitute <code>.../linux/centos/docker-ce.repo</code> if you prefer the CentOS one.</p>
-              </div>
-            </div>
+            <p class="note">Installed Docker 29.7.2 and Compose v5.5.0 on the test host.</p>
           </div>
         </article>
 
@@ -466,7 +460,7 @@ sudo systemctl enable --now docker</code></div>
             <p>This should print five paths and two versions:</p>
             <div class="cmd"><code>command -v tar gzip openssl perl docker &amp;&amp; docker compose version</code></div>
             <div class="caption">
-              <p>Now follow the <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a> from step 1. The installer detects that Docker is already present and skips its own installation step; every prompt, the deployment stages and the certificate-trust procedure are identical.</p>
+              <p>Now follow the <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a> from step 1. The installer detects that Docker is already present and skips its own installation step.</p>
             </div>
           </div>
         </article>
@@ -478,61 +472,40 @@ sudo systemctl enable --now docker</code></div>
     <section class="section">
       <h2>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        firewalld — nothing to do
+        firewalld
       </h2>
-      <p class="sub">The installer's firewall step understands only <code>ufw</code> and is silently skipped on RHEL. That is harmless.</p>
-      <p>Docker registers its bridge interfaces in its <strong>own</strong> firewalld zone, so published ports stay reachable even though <code>public</code> lists none:</p>
+      <p class="sub">The installer's firewall step understands only <code>ufw</code>, so on RHEL it is skipped without printing anything.</p>
+      <p>With <code>firewalld</code> in its default configuration this changed nothing on the test host: Docker registered its bridge interfaces in its own zone, and the front door answered while <code>public</code> listed no open ports.</p>
       <div class="cmd multi"><code># firewall-cmd --get-active-zones
 docker
   interfaces: docker0 br-…
 
 # firewall-cmd --list-ports          (zone: public)
-                                     &lt;- empty, yet https://&lt;host&gt;/ answers</code></div>
-      <p class="note">Leave <code>firewalld</code> running. Only if your site hardens forwarding with custom <code>DOCKER-USER</code> rules or a restrictive policy do you need to open <code>443/tcp</code> and <code>8555/tcp</code> + <code>8555/udp</code> yourself.</p>
-    </section>
-
-    <!-- ─── SELINUX ─── -->
-    <section class="section">
-      <h2>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg>
-        SELinux
-      </h2>
-      <div class="callout">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
-        <div class="body">
-          <p><strong>Untested territory.</strong></p>
-          <p>RHEL 9 runs SELinux in <code>enforcing</code> mode, and the containers bind-mount configuration and certificates out of <code>/opt/pq/compose</code>. This combination is outside our tested matrix.</p>
-        </div>
-      </div>
-      <p>If containers cannot read their mounts, look for denials before changing anything else:</p>
-      <div class="cmd"><code>sudo ausearch -m AVC -ts recent</code></div>
-      <p>Relabelling the compose directory resolves the common case:</p>
-      <div class="cmd"><code>sudo chcon -Rt container_file_t /opt/pq/compose</code></div>
-      <p class="note">Do not disable SELinux as a first move — report what you hit instead.</p>
+                                     &lt;- empty, yet https://&lt;host&gt;/ answered</code></div>
     </section>
 
     <!-- ─── VERIFICATION ─── -->
     <section class="section">
       <h2>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        What was verified
+        What was tested
       </h2>
       <p class="sub">So you know where the tested ground ends.</p>
 
       <table class="spec">
-        <thead><tr><th>Area</th><th>Status</th></tr></thead>
+        <thead><tr><th>Area</th><th>Result</th></tr></thead>
         <tbody>
-          <tr><td>Full install on Rocky Linux 9.8 · Docker 29.7.2 + Compose v5.5.0</td><td><span class="hl">Verified</span> — stack up, front door, Keycloak issuer, <code>/ca.crt</code></td></tr>
-          <tr><td><code>download.docker.com/linux/rhel</code> repository</td><td><span class="hl">Verified</span></td></tr>
-          <tr><td>firewalld leaves Docker-published ports reachable</td><td><span class="hl">Verified</span></td></tr>
-          <tr><td>Per-host root CA generation</td><td><span class="hl">Verified</span></td></tr>
-          <tr><td>SELinux <code>enforcing</code></td><td>Not verified — see above</td></tr>
-          <tr><td>RHEL proper (subscription-manager repositories)</td><td>Not verified — tested on the Rocky&nbsp;9 rebuild</td></tr>
+          <tr><td>Install on Rocky Linux 9.8 (RHEL 9 rebuild)<br>Docker 29.7.2 · Compose v5.5.0 · installer v1.6.3</td><td><span class="hl">Tested</span> — stack started, front door and <code>/ca.crt</code> answered, Keycloak issuer correct</td></tr>
+          <tr><td><code>download.docker.com/linux/rhel</code> repository</td><td><span class="hl">Tested</span> — on Rocky Linux 9.8</td></tr>
+          <tr><td>firewalld in its default configuration</td><td><span class="hl">Tested</span> — published ports stayed reachable</td></tr>
+          <tr><td>RHEL proper, with subscription-manager repositories</td><td>Not tested</td></tr>
+          <tr><td>SELinux in <code>enforcing</code> mode</td><td>Not tested</td></tr>
         </tbody>
       </table>
 
-      <p class="note">The preflight prints <code>! Not Ubuntu — only Ubuntu 22.04/24.04 LTS are supported. Continuing anyway.</code> That warning is cosmetic; the install proceeds normally.</p>
+      <p class="note">The preflight prints <code>! Not Ubuntu — only Ubuntu 22.04/24.04 LTS are supported. Continuing anyway.</code> That warning is cosmetic; the install proceeded.</p>
     </section>
+
   </main>
 
   <footer>
@@ -564,4 +537,3 @@ docker
     })();
   </script>
 </body>
-</html>
