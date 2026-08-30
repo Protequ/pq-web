@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Protequ — Linux Online Setup Quick Guide</title>
+  <title>Protequ — RHEL 9 Setup: differences from Ubuntu</title>
   <meta name="description" content="Protequ Physical Integration Management System — Linux online setup quick guide. One command installs Docker, pulls all images and brings up the PQ platform on Ubuntu." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -370,54 +370,62 @@
 
       <span class="eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
-        Online setup · Ubuntu · ~10 minutes
+        Online setup · RHEL 9 · differences from Ubuntu
       </span>
 
-      <h1>Get the PQ platform <span class="accent">running</span></h1>
+      <h1>Running the installer on <span class="accent">RHEL 9</span></h1>
       <p class="lead">
-        Copy the installer to your Ubuntu server and run it. Docker Engine and every application
-        image are installed and pulled automatically — no manual configuration.
+        The installer targets Ubuntu, and everything in the
+        <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a> applies unchanged —
+        except for four things it cannot provision on RHEL. Install those first, then follow
+        that guide exactly as written.
       </p>
 
       <div class="hero-meta">
-        <span><span class="dot"></span>5 steps · fully automated</span>
-        <span>Ubuntu 22.04 / 24.04 LTS · 64-bit</span>
-        <span>PQ Platform v1.0.0</span>
+        <span><span class="dot"></span>2 commands · then unchanged</span>
+        <span>RHEL 9 · Rocky Linux 9 · AlmaLinux 9</span>
+        <span>verified on Rocky Linux 9.8</span>
       </div>
     </section>
 
-    <!-- ─── PREREQUISITES ─── -->
+    <!-- ─── WHAT RHEL NEEDS ─── -->
     <section class="section">
       <h2>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Prerequisites
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg>
+        What RHEL needs that Ubuntu has
       </h2>
-      <p class="sub">The installer checks these automatically before it proceeds.</p>
+      <p class="sub">None of these ship in the RHEL 9 <strong>Minimal Install</strong> (package group <code>@core</code>). The first two stop the installer outright.</p>
 
       <table class="spec">
-        <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+        <thead><tr><th>What</th><th>Why it is needed · what happens without it</th></tr></thead>
         <tbody>
-          <tr><td>OS</td><td>Ubuntu 24.04 LTS — recommended</td></tr>
-          <tr><td></td><td class="sub-row">Ubuntu 22.04 LTS — supported</td></tr>
-          <tr><td>Architecture</td><td>64-bit (amd64) only</td></tr>
-          <tr><td>RAM</td><td><span class="hl">16 GB minimum</span></td></tr>
-          <tr><td>Disk</td><td>100 GB free space (Small tier)</td></tr>
-          <tr><td>Virtualization</td><td>Not required — Docker runs natively on the Linux kernel (no WSL2 / Hyper-V)</td></tr>
-          <tr><td>Internet</td><td>Required — Docker and images are pulled from <code>repo.protequ.com</code> during setup</td></tr>
-          <tr><td>Privileges</td><td>Root — launch the installer with <code>sudo</code></td></tr>
+          <tr>
+            <td>Docker Engine<br>+ compose plugin</td>
+            <td>The installer provisions Docker through <code>apt</code>, which RHEL has no equivalent of in its code path.<br><span class="hl">Aborts at <em>Docker Engine</em></span> — <code>apt-get: command not found</code></td>
+          </tr>
+          <tr>
+            <td><code>perl</code></td>
+            <td><code>configure-host.sh</code> rewrites the certificate SAN, the go2rtc ICE candidates and the Keycloak realm allowlist.<br><span class="hl">Aborts at <em>Host wiring</em></span> — <code>perl: command not found</code></td>
+          </tr>
+          <tr>
+            <td><code>openssl</code></td>
+            <td>Mints the root CA and the service certificates — host wiring fails without it.</td>
+          </tr>
+          <tr>
+            <td><code>tar</code>, <code>gzip</code></td>
+            <td><code>run.sh</code> unpacks the compose bundle — the installer refuses to start.</td>
+          </tr>
         </tbody>
       </table>
-      <p class="note">Unsupported OS versions are rejected; low RAM shows a warning. Ports 443 and 8555 must be reachable from operator devices.</p>
-      <p class="note">Installing on <strong>RHEL 9</strong> (or the Rocky Linux&nbsp;9 / AlmaLinux&nbsp;9 rebuilds)? See <a href="quick-guide-rhel.html">the RHEL differences</a> — four packages to install first, then this guide applies unchanged.</p>
     </section>
 
     <!-- ─── STEPS ─── -->
     <section class="section">
       <h2>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
-        Installation
+        Before you run the installer
       </h2>
-      <p class="sub">Five steps, start to finish. Most of it runs on its own.</p>
+      <p class="sub">Three steps. After them, the Linux quick guide applies verbatim.</p>
 
       <div class="steps">
 
@@ -425,17 +433,8 @@
         <article class="step">
           <div class="num">1</div>
           <div class="step-body">
-            <h3>Download &amp; run the installer</h3>
-            <p>Distribution is admin-mediated, like the Windows installer. Signed in to <code>repo.protequ.com</code>, download the single artifact <code>pq-installer-online-v&lt;version&gt;-linux-x86_64.tar.gz</code> from the <code>pq-installer</code> package, copy it to the server, then unpack and run as root:</p>
-            <div class="cmd multi"><code>tar xzf pq-installer-online-v*-linux-x86_64.tar.gz
-sudo ./run.sh</code></div>
-            <div class="callout">
-              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
-              <div class="body">
-                <p><strong>Run as root.</strong></p>
-                <p>The installer enables the Docker service, writes the compose stack to <code>/opt/pq</code>, and opens firewall ports — all of which require root. <code>run.sh</code> uses the binary + bundle next to it (no public download).</p>
-              </div>
-            </div>
+            <h3>Install the missing tools</h3>
+            <div class="cmd"><code>sudo dnf -y install tar gzip openssl perl-interpreter</code></div>
           </div>
         </article>
 
@@ -443,8 +442,19 @@ sudo ./run.sh</code></div>
         <article class="step">
           <div class="num">2</div>
           <div class="step-body">
-            <h3>Preflight &amp; Docker Engine</h3>
-            <p>The installer checks the OS, RAM, architecture, and busy ports. If <strong>Docker Engine</strong> is missing it adds Docker’s official apt repository, installs <code>docker-ce</code> and the compose plugin, and enables the <code>docker</code> service. No reboot is required.</p>
+            <h3>Install Docker Engine</h3>
+            <p>From Docker's official RHEL repository:</p>
+            <div class="cmd multi"><code>sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable --now docker</code></div>
+            <div class="callout">
+              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+              <div class="body">
+                <p><strong>Rocky Linux / AlmaLinux.</strong></p>
+                <p>Either repository works — substitute <code>.../linux/centos/docker-ce.repo</code> if you prefer the CentOS one.</p>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -452,50 +462,11 @@ sudo ./run.sh</code></div>
         <article class="step">
           <div class="num">3</div>
           <div class="step-body">
-            <h3>Network access</h3>
-            <p>Answer how operator devices reach this host. The detected hostname / LAN IP is offered as the default — press <kbd>Enter</kbd> to accept or type your own.</p>
+            <h3>Verify, then continue with the Linux guide</h3>
+            <p>This should print five paths and two versions:</p>
+            <div class="cmd"><code>command -v tar gzip openssl perl docker &amp;&amp; docker compose version</code></div>
             <div class="caption">
-              <p><strong>Host name or IP</strong> — clients open <code>https://&lt;host&gt;/</code>.</p>
-              <p><strong>Port</strong> — defaults to <code>443</code>; set e.g. <code>8443</code> if 443 is taken.</p>
-              <p><strong>Additional names / IPs</strong> — extra SANs added to the certificate and login allowlist. <em>Recommended:</em> add the server's IP address here, so the certificate is valid when clients connect by IP (not only by hostname).</p>
-              <p><strong>Own TLS certificate</strong> — optionally supply your own cert + key instead of the auto-generated one.</p>
-            </div>
-          </div>
-        </article>
-
-        <!-- Step 4 -->
-        <article class="step">
-          <div class="num">4</div>
-          <div class="step-body">
-            <h3>Deployment</h3>
-            <p>After the prompts, deployment proceeds automatically — no further input needed:</p>
-            <table class="spec timing">
-              <thead><tr><th>Stage</th><th>Duration</th></tr></thead>
-              <tbody>
-                <tr><td>Check prerequisites</td><td>~2 s</td></tr>
-                <tr><td>Install Docker Engine (if needed)</td><td>1–3 min</td></tr>
-                <tr><td>Log in to registry &amp; configure host</td><td>~10 s</td></tr>
-                <tr><td>Pull Docker images (repo.protequ.com)</td><td>3–10 min</td></tr>
-                <tr><td>Deploy application &amp; open firewall</td><td>~30 s</td></tr>
-                <tr><td>Health check</td><td>~30 s</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        <!-- Step 5 -->
-        <article class="step">
-          <div class="num">5</div>
-          <div class="step-body">
-            <h3>Done!</h3>
-            <p>The installer prints the URL. Verify the stack and open the UI:</p>
-            <div class="cmd"><code>docker compose -f /opt/pq/compose/docker-compose.yml ps</code></div>
-            <div class="caption">
-              <p>Open <a href="https://localhost/" rel="noopener">https://&lt;host&gt;:&lt;port&gt;/</a> in a browser and log in.</p>
-              <p>The browser shows a one-time certificate warning (self-signed) — click <strong>Advanced</strong> → <strong>Proceed</strong> to get in. To remove it permanently, see <strong>Trust the certificate</strong> below.</p>
-              <div class="creds">
-                <div class="kv"><span class="lbl">Default login</span><code>admin</code> / <code>admin</code></div>
-              </div>
+              <p>Now follow the <a href="quick-guide-linux.html">Linux Online Setup Quick Guide</a> from step 1. The installer detects that Docker is already present and skips its own installation step; every prompt, the deployment stages and the certificate-trust procedure are identical.</p>
             </div>
           </div>
         </article>
@@ -503,52 +474,65 @@ sudo ./run.sh</code></div>
       </div>
     </section>
 
-    <!-- ─── TRUST THE CERTIFICATE ─── -->
+    <!-- ─── FIREWALLD ─── -->
     <section class="section">
       <h2>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-        Trust the certificate
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        firewalld — nothing to do
       </h2>
-      <p class="sub">The front door uses a self-signed CA, so browsers warn until each operator workstation trusts it once. Skip this if you supplied your own publicly-trusted certificate during setup.</p>
+      <p class="sub">The installer's firewall step understands only <code>ufw</code> and is silently skipped on RHEL. That is harmless.</p>
+      <p>Docker registers its bridge interfaces in its <strong>own</strong> firewalld zone, so published ports stay reachable even though <code>public</code> lists none:</p>
+      <div class="cmd multi"><code># firewall-cmd --get-active-zones
+docker
+  interfaces: docker0 br-…
 
-      <p><strong>1 — Download the CA</strong> from the server (accept the one-time browser warning, or use curl):</p>
-      <div class="cmd"><code>curl.exe -k https://&lt;host&gt;:&lt;port&gt;/ca.crt -o "%USERPROFILE%\Downloads\pq-root-ca.crt"</code></div>
-
-      <p><strong>2 — Import it into “Trusted Root Certification Authorities”</strong> — either option works:</p>
-      <p>&bull; <strong>Right-click / double-click</strong> <code>pq-root-ca.crt</code> → <strong>Install Certificate</strong> → <strong>Local Machine</strong> → <strong>Place all certificates in the following store</strong> → <strong>Trusted Root Certification Authorities</strong> → <strong>Finish</strong>.</p>
-      <p>&bull; or <strong>PowerShell (as Administrator):</strong></p>
-      <div class="cmd"><code>Import-Certificate -FilePath "$env:USERPROFILE\Downloads\pq-root-ca.crt" -CertStoreLocation Cert:\LocalMachine\Root</code></div>
-
-      <p><strong>3 — Restart the browser.</strong> <code>https://&lt;host&gt;:&lt;port&gt;/</code> is now trusted (green padlock).</p>
-      <p class="note">In a domain, push the CA to all workstations via Group Policy instead of importing per machine. macOS/Linux clients import the same <code>ca.crt</code> into their system / browser trust store.</p>
+# firewall-cmd --list-ports          (zone: public)
+                                     &lt;- empty, yet https://&lt;host&gt;/ answers</code></div>
+      <p class="note">Leave <code>firewalld</code> running. Only if your site hardens forwarding with custom <code>DOCKER-USER</code> rules or a restrictive policy do you need to open <code>443/tcp</code> and <code>8555/tcp</code> + <code>8555/udp</code> yourself.</p>
     </section>
 
-    <!-- ─── TROUBLESHOOTING ─── -->
+    <!-- ─── SELINUX ─── -->
     <section class="section">
       <h2>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.7 6.3a4 4 0 0 1 5.7 5.7l-1 1 3.6 3.6a2 2 0 0 1-2.8 2.8L11.6 16l-1 1a4 4 0 0 1-5.7-5.7"/><path d="m9 9-4.5-4.5a2 2 0 0 1 2.8-2.8L11 5"/></svg>
-        Troubleshooting
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg>
+        SELinux
       </h2>
-      <p class="sub">Common issues and how to resolve them.</p>
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Untested territory.</strong></p>
+          <p>RHEL 9 runs SELinux in <code>enforcing</code> mode, and the containers bind-mount configuration and certificates out of <code>/opt/pq/compose</code>. This combination is outside our tested matrix.</p>
+        </div>
+      </div>
+      <p>If containers cannot read their mounts, look for denials before changing anything else:</p>
+      <div class="cmd"><code>sudo ausearch -m AVC -ts recent</code></div>
+      <p>Relabelling the compose directory resolves the common case:</p>
+      <div class="cmd"><code>sudo chcon -Rt container_file_t /opt/pq/compose</code></div>
+      <p class="note">Do not disable SELinux as a first move — report what you hit instead.</p>
+    </section>
 
-      <table class="spec trouble">
-        <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+    <!-- ─── VERIFICATION ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        What was verified
+      </h2>
+      <p class="sub">So you know where the tested ground ends.</p>
+
+      <table class="spec">
+        <thead><tr><th>Area</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>“System requirements not met”</td><td>Use Ubuntu 22.04 or 24.04 LTS on a 64-bit (amd64) host</td></tr>
-          <tr><td>Port already in use</td><td>Free the reported port, or set a different front-door port in Step 3</td></tr>
-          <tr><td>Docker daemon not running</td><td><code>sudo systemctl start docker</code>, then re-run the installer</td></tr>
-          <tr><td>Cannot reach the UI from another device</td><td>Open <code>443</code> + <code>8555</code> in the firewall (the installer does this when <code>ufw</code> is active)</td></tr>
-          <tr><td>Containers fail to start</td><td>Re-run the installer — it is idempotent and resumes</td></tr>
-          <tr><td>Certificate error in browser</td><td>Expected (self-signed) — Advanced → Proceed, or trust the CA (see <strong>Trust the certificate</strong>)</td></tr>
+          <tr><td>Full install on Rocky Linux 9.8 · Docker 29.7.2 + Compose v5.5.0</td><td><span class="hl">Verified</span> — stack up, front door, Keycloak issuer, <code>/ca.crt</code></td></tr>
+          <tr><td><code>download.docker.com/linux/rhel</code> repository</td><td><span class="hl">Verified</span></td></tr>
+          <tr><td>firewalld leaves Docker-published ports reachable</td><td><span class="hl">Verified</span></td></tr>
+          <tr><td>Per-host root CA generation</td><td><span class="hl">Verified</span></td></tr>
+          <tr><td>SELinux <code>enforcing</code></td><td>Not verified — see above</td></tr>
+          <tr><td>RHEL proper (subscription-manager repositories)</td><td>Not verified — tested on the Rocky&nbsp;9 rebuild</td></tr>
         </tbody>
       </table>
 
-      <div class="meta-files">
-        <div class="row-line"><strong>Logs</strong><span>— streamed by the installer; container logs via</span><code>docker compose logs</code></div>
-        <div class="row-line"><strong>Config files</strong><span>—</span><code>/opt/pq/compose/</code></div>
-      </div>
+      <p class="note">The preflight prints <code>! Not Ubuntu — only Ubuntu 22.04/24.04 LTS are supported. Continuing anyway.</code> That warning is cosmetic; the install proceeds normally.</p>
     </section>
-
   </main>
 
   <footer>
