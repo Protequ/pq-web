@@ -476,7 +476,7 @@
     // registry by .github/scripts/build-adapters-page.mjs at build time.
     // Each adapter's `category` is the org.protequ.category OCI label.
     const adapters = [
-      { id: 'pqdominus', category: 'intrusion', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
+      { id: 'pqdominus', category: 'intrusion,access', name: 'Abbas Dominus 3', vendor: 'Abbas', description: 'Dominus3 hybrid intrusion + access platform via the Outdom2 SDK — subsystems, concentrators, detectors, keypads, doors and relay outputs.', capabilities: ['partitions', 'access'] },
       { id: 'pqademco', category: 'intrusion', name: 'Ademco Galaxy Smart', vendor: 'Honeywell Ademco', description: 'Galaxy Smart intrusion panel with on-bus card readers, keypads and DCM doors — partitions, zones, outputs and access control over a single TCP link.', capabilities: ['timeSync', 'partitions', 'access'] },
       { id: 'pqaxis', category: 'cctv', name: 'Axis Camera', vendor: 'Axis', inDevelopment: true, prerelease: true, description: 'Axis network cameras via VAPIX: live and recorded RTSP, snapshots, and license-plate access.', capabilities: ['rtsp', 'access'] },
       { id: 'pqcctvsim', category: 'cctv', name: 'CCTV Simulator', vendor: 'Protequ', demo: true, description: 'Virtual NVR with cameras and channels that generates motion, recording, streaming, quality and analytics events on a schedule — for demos and UI testing.', capabilities: ['ptz', 'analytics'] },
