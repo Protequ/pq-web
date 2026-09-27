@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Protequ — Linux Online Setup Quick Guide</title>
-  <meta name="description" content="Protequ Physical Integration Management System — Linux online setup quick guide. One command installs Docker, pulls all images and brings up the PQ platform on Ubuntu." />
+  <title>Protequ — Linux Setup Quick Guide</title>
+  <meta name="description" content="Protequ Physical Integration Management System — Linux setup quick guide. Installs Docker, brings up the PQ platform on Ubuntu, online from the registry or offline from carried-in image archives, and covers licensing." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -375,12 +375,13 @@
 
       <h1>Get the PQ platform <span class="accent">running</span></h1>
       <p class="lead">
-        Copy the installer to your Ubuntu server and run it. Docker Engine and every application
-        image are installed and pulled automatically — no manual configuration.
+        Copy the installer to your Ubuntu server and run it. Docker Engine and the whole
+        application stack are set up for you &#8212; pulled from the registry, or loaded from
+        image archives you carry in when the server has no route out.
       </p>
 
       <div class="hero-meta">
-        <span><span class="dot"></span>5 steps · fully automated</span>
+        <span><span class="dot"></span>6 steps · fully automated</span>
         <span>Ubuntu 22.04 / 24.04 LTS · 64-bit</span>
         <span>PQ Platform v1.0.0</span>
       </div>
@@ -408,6 +409,7 @@
         </tbody>
       </table>
       <p class="note">Unsupported OS versions are rejected; low RAM shows a warning. Ports 443 and 8555 must be reachable from operator devices.</p>
+      <p class="note">No route to <code>repo.protequ.com</code> from this server? Everything below still applies &#8212; see <a href="#offline"><strong>Offline install</strong></a> for how to carry the images in.</p>
       <p class="note">Installing on <strong>RHEL 9</strong> (or the Rocky Linux&nbsp;9 / AlmaLinux&nbsp;9 rebuilds)? See <a href="quick-guide-rhel.html">the RHEL differences</a> — four packages to install first, then this guide applies unchanged.</p>
     </section>
 
@@ -417,7 +419,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
         Installation
       </h2>
-      <p class="sub">Five steps, start to finish. Most of it runs on its own.</p>
+      <p class="sub">Six steps, start to finish. Only two of them ask you anything.</p>
 
       <div class="steps">
 
@@ -452,6 +454,41 @@ sudo ./run.sh</code></div>
         <article class="step">
           <div class="num">3</div>
           <div class="step-body">
+            <h3>Choose adapters</h3>
+            <p>The installer reads the adapter catalogue and lists what it can install. Entries marked <code>*</code> are enabled by default.</p>
+            <div class="cmd multi"><code>&#9654; Catalog
+  1 core + 5 infrastructure image(s), 19 adapter(s) available
+
+  Available adapters (enter numbers separated by space, blank = defaults):
+    1) [ ] pqademco            Ademco &#8212; Ademco Galaxy Smart
+    2) [*] pqcctvsim           Protequ &#8212; CCTV Simulator
+    3) [ ] pqhikvision         Hikvision &#8212; Hikvision CCTV
+    4) [*] pqmonitor           Protequ &#8212; Monitoring &amp; Visualization
+   &#8230;
+   ( * = enabled by default )
+  Selection: 3 4</code></div>
+            <div class="caption">
+              <p><strong>Type numbers separated by spaces</strong> to pick exactly what this site needs.</p>
+              <p><strong>Press <kbd>Enter</kbd> on an empty line</strong> to take the defaults.</p>
+              <p><strong>Nothing is permanent.</strong> Re-run the installer later to add or remove adapters; data in the volumes is kept.</p>
+            </div>
+            <p>To skip the prompt, name them on the command line instead. Matching is forgiving &#8212; image name, a fragment of it, or the device vendor all work, in any case:</p>
+            <div class="cmd multi"><code>sudo ./run.sh -- --adapters hikvision,monitor
+sudo ./run.sh -- --all</code></div>
+            <div class="callout">
+              <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+              <div class="body">
+                <p><strong>A named adapter that is not in the list is skipped with a warning, not an error.</strong></p>
+                <p>The install continues without it. Two things hide an adapter: it has only pre-release versions (add <code>--include-prerelease</code>), or its image is genuinely not published. Read the warnings before walking away from an unattended run.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="step">
+          <div class="num">4</div>
+          <div class="step-body">
             <h3>Network access</h3>
             <p>Answer how operator devices reach this host. The detected hostname / LAN IP is offered as the default — press <kbd>Enter</kbd> to accept or type your own.</p>
             <div class="caption">
@@ -463,9 +500,9 @@ sudo ./run.sh</code></div>
           </div>
         </article>
 
-        <!-- Step 4 -->
+        <!-- Step 5 -->
         <article class="step">
-          <div class="num">4</div>
+          <div class="num">5</div>
           <div class="step-body">
             <h3>Deployment</h3>
             <p>After the prompts, deployment proceeds automatically — no further input needed:</p>
@@ -483,9 +520,9 @@ sudo ./run.sh</code></div>
           </div>
         </article>
 
-        <!-- Step 5 -->
+        <!-- Step 6 -->
         <article class="step">
-          <div class="num">5</div>
+          <div class="num">6</div>
           <div class="step-body">
             <h3>Done!</h3>
             <p>The installer prints the URL. Verify the stack and open the UI:</p>
@@ -501,6 +538,45 @@ sudo ./run.sh</code></div>
         </article>
 
       </div>
+    </section>
+
+    <!-- ─── PARAMETERS ─── -->
+    <section class="section">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="currentColor"/><circle cx="15" cy="12" r="2" fill="currentColor"/><circle cx="7" cy="18" r="2" fill="currentColor"/></svg>
+        Parameters
+      </h2>
+      <p class="sub">Everything the prompts ask can be given up front. Anything you leave out is prompted for &#8212; or defaulted under <code>--yes</code>.</p>
+
+      <p>Arguments go after <code>--</code>, which tells <code>run.sh</code> to pass the rest through:</p>
+      <div class="cmd"><code>sudo ./run.sh -- --host pq.acme.local --port 443 --adapters hikvision,monitor</code></div>
+
+      <table class="spec">
+        <thead><tr><th>Parameter</th><th>What it does &#8212; and what happens without it</th></tr></thead>
+        <tbody>
+          <tr><td><code>--host</code></td><td>Name or IP clients use. Goes into the certificate and the login allowlist. <span class="sub-row">Omitted: the detected hostname / LAN IP is offered as the default.</span></td></tr>
+          <tr><td><code>--port</code></td><td>Front-door port. <span class="sub-row">Omitted: <code>443</code>. Set it when 443 is already taken &#8212; nginx still listens on 443 inside the container.</span></td></tr>
+          <tr><td><code>--sans</code></td><td>Extra names / IPs added to the certificate and the login allowlist, comma-separated. <span class="sub-row"><strong>Recommended:</strong> add the server&#8217;s IP, or the certificate is invalid when clients connect by IP.</span></td></tr>
+          <tr><td><code>--cert</code> <code>--key</code></td><td>Use your own TLS certificate instead of the generated one. Both are required together. <span class="sub-row">Omitted: a self-signed CA is minted on this host.</span></td></tr>
+          <tr><td><code>--adapters</code></td><td>Comma-separated adapters, matched on image name, a fragment of it, or the device vendor. <span class="sub-row">Omitted: you are asked interactively.</span></td></tr>
+          <tr><td><code>--all</code></td><td>Every adapter in the catalogue.</td></tr>
+          <tr><td><code>--include-prerelease</code></td><td>Also offer release candidates. <span class="sub-row">Without it, an adapter that has <em>only</em> pre-release versions is invisible.</span></td></tr>
+          <tr><td><code>--image-tag</code></td><td>Pin one image to a version, e.g. <code>--image-tag pqserver=1.16.0</code>. Repeatable. <span class="sub-row">Pinning a pre-release is refused unless <code>--include-prerelease</code> is also given.</span></td></tr>
+          <tr><td><code>--install-dir</code></td><td>Where the stack lives. <span class="sub-row">Omitted: <code>/opt/pq</code>.</span></td></tr>
+          <tr><td><code>--yes</code></td><td>Never prompt; take the defaults. <span class="sub-row">Adapters then fall back to the default-enabled set unless <code>--adapters</code> or <code>--all</code> is given.</span></td></tr>
+          <tr><td class="hl"><code>--offline</code><br><code>--images-dir</code></td><td>Install from image archives on disk instead of the registry. See <strong>Offline install</strong> below.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong><code>--yes</code> does not skip the licence agreement.</strong></p>
+          <p>Nobody is there to tick the box, so an unattended run has to state it instead. Without these four the install stops before touching the host:</p>
+        </div>
+      </div>
+      <div class="cmd multi"><code>sudo ./run.sh -- --yes   --accept-eula   --end-customer "Acme Manufacturing"   --integrator "Your Company s.r.o."   --installer-name "Jane Novak"   --host pq.acme.local --adapters hikvision,monitor</code></div>
+      <p class="note">Add <code>--accept-eula-on-behalf</code> only when the end customer has authorised you to accept on their behalf. The acceptance is written to <code>/opt/pq/eula/</code> as a timestamped receipt.</p>
     </section>
 
     <!-- ─── TRUST THE CERTIFICATE ─── -->
@@ -521,6 +597,110 @@ sudo ./run.sh</code></div>
 
       <p><strong>3 — Restart the browser.</strong> <code>https://&lt;host&gt;:&lt;port&gt;/</code> is now trusted (green padlock).</p>
       <p class="note">In a domain, push the CA to all workstations via Group Policy instead of importing per machine. macOS/Linux clients import the same <code>ca.crt</code> into their system / browser trust store.</p>
+    </section>
+
+    <!-- ─── LICENSING ─── -->
+    <section class="section" id="licensing">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+        Licensing
+      </h2>
+      <p class="sub">The platform installs unlicensed. Until you activate it, the core runs but no adapter does.</p>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>What an unlicensed system looks like &#8212; so you don&#8217;t chase the wrong fault.</strong></p>
+          <p>The front door, the web UI and the login all work normally. Every adapter is refused at registration and restarts in a loop, and <code>docker logs server</code> shows:</p>
+        </div>
+      </div>
+      <div class="cmd"><code>[LICDBG] Adapter registration rejected by license. Adapter=&#8230;, Code=LicenseNotOperational</code></div>
+      <p class="note">That is the normal state of a freshly installed system, not a failed install. Activate before you start suspecting the images or the network.</p>
+
+      <h3 style="margin-top:28px">Online activation &#8212; the short way</h3>
+      <p>Open <code>https://&lt;host&gt;:&lt;port&gt;/licensing</code> and use the <strong>Online activation</strong> panel:</p>
+      <div class="caption">
+        <p><strong>1.</strong> Enter the <strong>voucher code</strong> you were supplied and press <strong>Activate online</strong>.</p>
+        <p><strong>2.</strong> The screen shows a <strong>verification link and a short user code</strong>. Open the link &#8212; on this machine, your laptop or your phone, it does not matter which &#8212; and confirm the code.</p>
+        <p><strong>3.</strong> Leave the licensing page open. It polls, collects the issued licence and imports it by itself. Adapters register on their next restart cycle.</p>
+      </div>
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>The server does the talking, not your browser.</strong></p>
+          <p>The PQ server itself must reach the Protequ activation service and shop. Confirming the code from a phone on a different network does not help if the server has no outbound route &#8212; you will get <em>&#8220;The activation service could not be reached&#8221;</em>. Use the licence file instead.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px">Licence file &#8212; when the server has no outbound route</h3>
+      <p>The same page carries a file exchange, which needs nothing from the server but the two files you carry:</p>
+      <div class="caption">
+        <p><strong>1.</strong> Press <strong>Download request</strong>. You get <code>activation-request-&lt;timestamp&gt;.pqrequest</code>.</p>
+        <p><strong>2.</strong> Take it to a machine with internet and have Protequ issue a licence from it.</p>
+        <p><strong>3.</strong> Bring the issued <code>.lic</code> back and press <strong>Import</strong> on the same page. <span class="sub-row">Older <code>.pqlic</code> files are accepted too.</span></p>
+      </div>
+
+      <table class="spec">
+        <thead><tr><th>Watch out for</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Activate <strong>last</strong></td><td>The request is tied to this installation. Reinstalling regenerates it and a licence issued against the old request no longer fits.</td></tr>
+          <tr><td>Every adapter needs its own line</td><td>Including the module-shaped ones such as Monitor and DB&nbsp;Backup. A licence covering only some leaves the rest refused &#8212; with the same log line as no licence at all, which reads like an outage rather than a missing entitlement.</td></tr>
+          <tr><td>Give it a restart cycle</td><td>Adapters announce themselves at startup. Rejection lines are logged every ~30&nbsp;s, so lines written <em>before</em> the import look identical to live ones &#8212; compare against <code>docker inspect server --format '{{.State.StartedAt}}'</code>.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── OFFLINE INSTALL ─── -->
+    <section class="section" id="offline">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-9-9 9 9 0 0 1 9-9"/><path d="M16 3h5v5"/><path d="m21 3-8 8"/><path d="m3 3 18 18"/></svg>
+        Offline install
+      </h2>
+      <p class="sub">For a server that cannot reach <code>repo.protequ.com</code>. You carry the images in; the install never touches the registry.</p>
+
+      <h3>1 &#8212; Pack the images, on a machine that has internet</h3>
+      <p>Needs Docker and a read-only registry token. From a checkout of the repository:</p>
+      <div class="cmd"><code>PQ_REGISTRY_TOKEN=&lt;token&gt; ./.install/pull-images.sh</code></div>
+      <p>One archive per image lands in <code>images/</code> &#8212; roughly <strong>2.5&nbsp;GB</strong> for the full catalogue:</p>
+      <div class="cmd multi"><code>images/pq-server.tar  images/pq-postgres.tar  images/pq-hikvision.tar  &#8230;
+images/ext-nginx-1.27-alpine.tar  images/ext-grafana-grafana-11.4.0.tar  &#8230;</code></div>
+      <div class="caption">
+        <p><strong><code>--only server,monitor,hikvision</code></strong> packs just those, plus everything the platform always needs. Each adapter you leave out is an archive you don&#8217;t carry.</p>
+        <p><strong>The <code>ext-*</code> archives are not optional.</strong> They are the upstream images the stack runs &#8212; nginx is the front door itself. The script reads them out of the compose file, so <code>--only</code> does not apply to them.</p>
+      </div>
+
+      <h3 style="margin-top:28px">2 &#8212; Put <code>images/</code> next to the installer</h3>
+      <div class="cmd multi"><code>pq-offline/
+  run.sh
+  pqinstall-linux-x86_64
+  compose-bundle.tar.gz
+  images/</code></div>
+      <p>Copy the whole directory to the server &#8212; USB, <code>scp</code>, whatever your change process allows.</p>
+
+      <h3 style="margin-top:28px">3 &#8212; Install</h3>
+      <div class="cmd"><code>chmod +x run.sh &amp;&amp; sudo ./run.sh</code></div>
+      <p><code>run.sh</code> sees <code>images/</code> and switches to offline by itself &#8212; the banner reads <strong>Linux offline installer</strong>. It loads the archives, reads the adapter catalogue back off them, then asks the same questions as an online install. Everything in <strong>Parameters</strong> above still applies.</p>
+      <p class="note">The archives are read <strong>in place</strong>, not copied into <code>/opt/pq</code>, which would cost the same few GB again. On removable media, keep it mounted for the whole install. To point elsewhere: <code>sudo ./run.sh -- --images-dir /mnt/usb/pq-images</code></p>
+
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Docker Engine must already be installed.</strong></p>
+          <p>An online install adds it from Docker&#8217;s apt repository; an air-gapped host cannot reach it, so the installer stops with a clear message instead. <code>configure-host.sh</code> also needs <code>openssl</code> and <code>perl</code> to mint the certificate. Check all three before you start &#8212; afterwards there is no package source to fix it from:</p>
+        </div>
+      </div>
+      <div class="cmd"><code>docker info &gt;/dev/null &amp;&amp; command -v openssl &amp;&amp; command -v perl &amp;&amp; echo "prerequisites OK"</code></div>
+
+      <table class="spec">
+        <thead><tr><th>Differs from an online install</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>The catalogue is what you packed</td><td>Adapter selection lists the archives present, not the registry. To add one later, pull its archive, drop it into <code>images/</code> and re-run the installer.</td></tr>
+          <tr><td>No pull stage</td><td>Compose starts with <code>--pull never</code>, so an incomplete archive set fails immediately instead of hanging on a name that will never resolve.</td></tr>
+          <tr><td><code>--image-tag</code> only pins what you packed</td><td>Pull that tag with <code>pull-images.sh --tag</code> first. A non-<code>latest</code> tag is packed under both names, because the stack resolves to <code>latest</code>.</td></tr>
+          <tr><td>Updates are a re-run</td><td>Pack the newer images, replace <code>images/</code>, run <code>sudo ./run.sh</code> again. Volumes survive, so data is kept.</td></tr>
+          <tr><td>Licensing</td><td>Online activation still works <em>if the server has an outbound route</em> &#8212; being unable to reach the registry does not always mean being unable to reach anything. Truly air-gapped, use the licence file exchange under <strong>Licensing</strong> above.</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <!-- ─── TROUBLESHOOTING ─── -->
