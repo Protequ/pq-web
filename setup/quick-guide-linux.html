@@ -377,7 +377,7 @@
       <p class="lead">
         Copy the installer to your Ubuntu server and run it. Docker Engine and the whole
         application stack are set up for you &#8212; pulled from the registry, or loaded from
-        image archives you carry in when the server has no route out.
+        image archives supplied with it when the server has no route out.
       </p>
 
       <div class="hero-meta">
@@ -409,7 +409,7 @@
         </tbody>
       </table>
       <p class="note">Unsupported OS versions are rejected; low RAM shows a warning. Ports 443 and 8555 must be reachable from operator devices.</p>
-      <p class="note">No route to <code>repo.protequ.com</code> from this server? Everything below still applies &#8212; see <a href="#offline"><strong>Offline install</strong></a> for how to carry the images in.</p>
+      <p class="note">No route to <code>repo.protequ.com</code> from this server? Everything below still applies &#8212; see <a href="#offline"><strong>Offline install</strong></a> &#8212; Protequ supplies a kit with the images included.</p>
       <p class="note">Installing on <strong>RHEL 9</strong> (or the Rocky Linux&nbsp;9 / AlmaLinux&nbsp;9 rebuilds)? See <a href="quick-guide-rhel.html">the RHEL differences</a> — four packages to install first, then this guide applies unchanged.</p>
     </section>
 
@@ -656,28 +656,18 @@ sudo ./run.sh -- --all</code></div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-9-9 9 9 0 0 1 9-9"/><path d="M16 3h5v5"/><path d="m21 3-8 8"/><path d="m3 3 18 18"/></svg>
         Offline install
       </h2>
-      <p class="sub">For a server that cannot reach <code>repo.protequ.com</code>. You carry the images in; the install never touches the registry.</p>
+      <p class="sub">For a server that cannot reach <code>repo.protequ.com</code>. The images travel with the installer; nothing contacts the registry.</p>
 
-      <h3>1 &#8212; Pack the images, on a machine that has internet</h3>
-      <p>Needs Docker and a read-only registry token. From a checkout of the repository:</p>
-      <div class="cmd"><code>PQ_REGISTRY_TOKEN=&lt;token&gt; ./.install/pull-images.sh</code></div>
-      <p>One archive per image lands in <code>images/</code> &#8212; roughly <strong>2.5&nbsp;GB</strong> for the full catalogue:</p>
-      <div class="cmd multi"><code>images/pq-server.tar  images/pq-postgres.tar  images/pq-hikvision.tar  &#8230;
-images/ext-nginx-1.27-alpine.tar  images/ext-grafana-grafana-11.4.0.tar  &#8230;</code></div>
-      <div class="caption">
-        <p><strong><code>--only server,monitor,hikvision</code></strong> packs just those, plus everything the platform always needs. Each adapter you leave out is an archive you don&#8217;t carry.</p>
-        <p><strong>The <code>ext-*</code> archives are not optional.</strong> They are the upstream images the stack runs &#8212; nginx is the front door itself. The script reads them out of the compose file, so <code>--only</code> does not apply to them.</p>
-      </div>
-
-      <h3 style="margin-top:28px">2 &#8212; Put <code>images/</code> next to the installer</h3>
+      <h3>1 &#8212; What you receive</h3>
+      <p>Protequ supplies the offline kit with the images already packed for the adapters you ordered &#8212; roughly <strong>2.5&nbsp;GB</strong> for a full set. Keep the four items together, exactly as they arrive:</p>
       <div class="cmd multi"><code>pq-offline/
   run.sh
   pqinstall-linux-x86_64
   compose-bundle.tar.gz
   images/</code></div>
-      <p>Copy the whole directory to the server &#8212; USB, <code>scp</code>, whatever your change process allows.</p>
+      <p>Copy the whole directory to the server &#8212; USB, <code>scp</code>, whatever your change process allows. <code>images/</code> must sit <strong>next to</strong> <code>run.sh</code>: that is what tells the installer to go offline.</p>
 
-      <h3 style="margin-top:28px">3 &#8212; Install</h3>
+      <h3 style="margin-top:28px">2 &#8212; Install</h3>
       <div class="cmd"><code>chmod +x run.sh &amp;&amp; sudo ./run.sh</code></div>
       <p><code>run.sh</code> sees <code>images/</code> and switches to offline by itself &#8212; the banner reads <strong>Linux offline installer</strong>. It loads the archives, reads the adapter catalogue back off them, then asks the same questions as an online install. Everything in <strong>Parameters</strong> above still applies.</p>
       <p class="note">The archives are read <strong>in place</strong>, not copied into <code>/opt/pq</code>, which would cost the same few GB again. On removable media, keep it mounted for the whole install. To point elsewhere: <code>sudo ./run.sh -- --images-dir /mnt/usb/pq-images</code></p>
@@ -694,10 +684,10 @@ images/ext-nginx-1.27-alpine.tar  images/ext-grafana-grafana-11.4.0.tar  &#8230;
       <table class="spec">
         <thead><tr><th>Differs from an online install</th><th></th></tr></thead>
         <tbody>
-          <tr><td>The catalogue is what you packed</td><td>Adapter selection lists the archives present, not the registry. To add one later, pull its archive, drop it into <code>images/</code> and re-run the installer.</td></tr>
+          <tr><td>The catalogue is the kit</td><td>Adapter selection lists what is in <code>images/</code>, not what exists in the registry. Adding an adapter later means asking Protequ for its archive, dropping it into <code>images/</code> and re-running the installer.</td></tr>
           <tr><td>No pull stage</td><td>Compose starts with <code>--pull never</code>, so an incomplete archive set fails immediately instead of hanging on a name that will never resolve.</td></tr>
-          <tr><td><code>--image-tag</code> only pins what you packed</td><td>Pull that tag with <code>pull-images.sh --tag</code> first. A non-<code>latest</code> tag is packed under both names, because the stack resolves to <code>latest</code>.</td></tr>
-          <tr><td>Updates are a re-run</td><td>Pack the newer images, replace <code>images/</code>, run <code>sudo ./run.sh</code> again. Volumes survive, so data is kept.</td></tr>
+          <tr><td><code>--image-tag</code> only pins what is in the kit</td><td>A version that was not packed cannot be pinned &#8212; the pin would resolve to an image that is not there and the stack would refuse to start.</td></tr>
+          <tr><td>Updates are a re-run</td><td>Replace <code>images/</code> with the newer kit and run <code>sudo ./run.sh</code> again. Volumes survive, so data is kept.</td></tr>
           <tr><td>Licensing</td><td>Online activation still works <em>if the server has an outbound route</em> &#8212; being unable to reach the registry does not always mean being unable to reach anything. Truly air-gapped, use the licence file exchange under <strong>Licensing</strong> above.</td></tr>
         </tbody>
       </table>
