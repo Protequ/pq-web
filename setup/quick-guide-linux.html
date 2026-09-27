@@ -618,12 +618,20 @@ sudo ./run.sh -- --all</code></div>
       <p class="note">That is the normal state of a freshly installed system, not a failed install. Activate before you start suspecting the images or the network.</p>
 
       <h3 style="margin-top:28px">Online activation &#8212; the short way</h3>
-      <p>Open <code>https://&lt;host&gt;:&lt;port&gt;/licensing</code> and use the <strong>Online activation</strong> panel:</p>
+      <div class="callout">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <div class="body">
+          <p><strong>Sort out the Protequ account first.</strong></p>
+          <p>Confirming the activation needs a <strong>Protequ account</strong> &#8212; a different account from the one you log in to this server with. It is not your local <code>admin</code> user. If you do not have one yet you must register and <strong>verify your email address</strong> before you can confirm anything, and the confirmation code on the licensing screen expires while you are doing it. Have the account ready <em>before</em> you press Activate.</p>
+        </div>
+      </div>
+      <p>Then open <code>https://&lt;host&gt;:&lt;port&gt;/licensing</code> and use the <strong>Online activation</strong> panel:</p>
       <div class="caption">
         <p><strong>1.</strong> Enter the <strong>voucher code</strong> you were supplied and press <strong>Activate online</strong>.</p>
-        <p><strong>2.</strong> The screen shows a <strong>verification link and a short user code</strong>. Open the link &#8212; on this machine, your laptop or your phone, it does not matter which &#8212; and confirm the code.</p>
+        <p><strong>2.</strong> The screen shows a <strong>verification link and a short user code</strong>. Open the link on any device, sign in with your <strong>Protequ account</strong>, and confirm the code.</p>
         <p><strong>3.</strong> Leave the licensing page open. It polls, collects the issued licence and imports it by itself. Adapters register on their next restart cycle.</p>
       </div>
+      <p class="note">If the code expires before you confirm it, the screen says so &#8212; press <strong>Activate online</strong> again for a fresh one. Nothing is consumed by a failed attempt.</p>
       <div class="callout">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
         <div class="body">
