@@ -385,7 +385,7 @@
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
         <div class="body">
           <p><strong>Never enable this in production.</strong></p>
-          <p>The <code>nats-dev</code> proxy publishes NATS on <code>0.0.0.0</code> — reachable from anywhere on the LAN — using the shared <code>pq-master</code> / <code>pq-master</code> credentials. <code>InternalApi__AllowExternal</code>, if you ever need it, bypasses the IP-based protection in front of <code>/Internal/*</code>. Only do this on a development box you control.</p>
+          <p>The <code>nats-dev</code> proxy publishes NATS on <code>0.0.0.0</code> — reachable from anywhere on the LAN — using the shared <code>pq-master</code> / <code>pq-master</code> credentials. The <code>dev-gateway</code> sidecar opens the Internal API, the go2rtc API and the Keycloak admin console to anyone who can reach the front door. <code>InternalApi__AllowExternal</code>, if you ever need it, bypasses the IP-based protection in front of <code>/Internal/*</code>. Only do this on a development box you control.</p>
         </div>
       </div>
     </section>
@@ -449,10 +449,10 @@
           <div class="num">1</div>
           <div class="step-body">
             <h3>Start PQ with the dev profile</h3>
-            <p>From the compose folder, bring the stack up with the <code>dev</code> profile and allow external Internal API access:</p>
+            <p>From the compose folder, bring the stack up with the <code>dev</code> profile:</p>
             <div class="cmd multi"><code>cd .install/compose
-INTERNAL_API_ALLOW_EXTERNAL=true docker compose --profile dev up -d</code></div>
-            <p>This starts the <code>nats-dev</code> socat sidecar, which publishes NATS on <code>localhost:4222</code>, and sets <code>InternalApi__AllowExternal=true</code> so your host can call <code>/Internal/*</code>.</p>
+docker compose --profile dev up -d</code></div>
+            <p>This starts two socat sidecars: <code>nats-dev</code> publishes NATS on <code>localhost:4222</code>, and <code>dev-gateway</code> opens <code>/Internal/*</code>, <code>/go2rtc/</code> and the Keycloak admin console (<code>/idp/admin/</code>) on the front door. Without the dev profile the front door answers these paths with HTTP 404.</p>
           </div>
         </article>
 
@@ -487,11 +487,13 @@ INTERNAL_API_ALLOW_EXTERNAL=true docker compose --profile dev up -d</code></div>
             <h3>Publish NATS</h3>
             <p>Run a standalone socat sidecar on the Docker host to publish NATS on <code>4222</code>:</p>
             <div class="cmd multi"><code>docker run -d --name nats-dev --network pq_default -p 4222:4222 alpine/socat:latest TCP-LISTEN:4222,fork,reuseaddr TCP:nats:4222</code></div>
+            <p>Then run the <code>dev-gateway</code> sidecar, which opens <code>/Internal/*</code>, <code>/go2rtc/</code> and the Keycloak admin console on the front door:</p>
+            <div class="cmd multi"><code>docker run -d --name dev-gateway --network pq_default --entrypoint /bin/sh alpine/socat:latest -c "socat TCP-LISTEN:5443,fork,reuseaddr TCP:server:5443 &amp; socat TCP-LISTEN:1984,fork,reuseaddr TCP:go2rtc:1984 &amp; exec socat TCP-LISTEN:8443,fork,reuseaddr TCP:keycloak:8443"</code></div>
             <div class="callout">
               <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/></svg></div>
               <div class="body">
                 <p><strong>This does not survive a redeploy.</strong></p>
-                <p>A standalone <code>docker run</code> container isn't part of the compose stack, so <code>docker compose down</code> — or any redeploy — doesn't restart it. Re-run the command above afterwards. It publishes NATS on <code>0.0.0.0</code> (LAN-reachable) with the shared <code>pq-master</code> / <code>pq-master</code> credentials.</p>
+                <p>A standalone <code>docker run</code> container isn't part of the compose stack, so <code>docker compose down</code> — or any redeploy — doesn't restart it. Re-run the commands above afterwards. It publishes NATS on <code>0.0.0.0</code> (LAN-reachable) with the shared <code>pq-master</code> / <code>pq-master</code> credentials.</p>
               </div>
             </div>
           </div>
@@ -502,7 +504,7 @@ INTERNAL_API_ALLOW_EXTERNAL=true docker compose --profile dev up -d</code></div>
           <div class="num">2</div>
           <div class="step-body">
             <h3>Internal API</h3>
-            <p>Normally, <strong>nothing to do here</strong>. Your host-run adapter reaches <code>/Internal/*</code> through the nginx front door at <code>https://localhost:5443</code>, using the base URL and <code>X-Api-Key</code> it receives automatically at registration. The adapter's HTTP client bypasses TLS validation for this, so there's no CA setup either. On a standard installed box, <code>/Internal/*</code> is not IP-blocked from the host.</p>
+            <p>Normally, <strong>nothing to do here</strong>. With <code>dev-gateway</code> running, your host-run adapter reaches <code>/Internal/*</code> through the nginx front door at <code>https://localhost:5443</code>, using the base URL and <code>X-Api-Key</code> it receives automatically at registration. The adapter's HTTP client bypasses TLS validation for this, so there's no CA setup either. An HTTP 404 on <code>/Internal/*</code> means <code>dev-gateway</code> is not running.</p>
             <p>Only if you hit an HTTP 403 on <code>/Internal/*</code> (see <strong>Troubleshooting</strong> below) does an admin need to set <code>InternalApi__AllowExternal=true</code> on the <code>server</code> service and restart it.</p>
           </div>
         </article>
@@ -580,7 +582,7 @@ INTERNAL_API_ALLOW_EXTERNAL=true docker compose --profile dev up -d</code></div>
       <div class="cmd"><code>docker compose --profile dev down</code></div>
 
       <p style="color: var(--text-dim); font-size: 14.5px; margin: 18px 0 6px;"><strong style="color: var(--text);">Branch B</strong> — remove the standalone sidecar:</p>
-      <div class="cmd"><code>docker rm -f nats-dev</code></div>
+      <div class="cmd"><code>docker rm -f nats-dev dev-gateway</code></div>
       <p class="note">If you set <code>InternalApi__AllowExternal=true</code> as a troubleshooting fallback, unset it on the <code>server</code> service and restart the container.</p>
     </section>
 
